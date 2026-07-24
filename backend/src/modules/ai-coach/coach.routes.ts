@@ -6,3 +6,4 @@ export const coachRoutes = Router();
 
 coachRoutes.use(authenticate);
 coachRoutes.post('/chat', coachController.chat);
+coachRoutes.get('/status', coachController.status);

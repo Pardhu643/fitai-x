@@ -46,5 +46,17 @@ export const coachController = {
       }
       return res.status(503).json({ error: 'Rachel is temporarily unavailable. Please try again shortly.' });
     }
+  }),
+
+  status: asyncHandler(async (_req: Request, res: Response): Promise<any> => {
+    const isConfigured = !!process.env.GEMINI_API_KEY;
+    const model = process.env.GEMINI_MODEL || 'gemini-flash-latest';
+    return res.json({
+      success: true,
+      configured: isConfigured,
+      provider: 'Gemini',
+      model: model,
+      reachable: isConfigured
+    });
   })
 };
