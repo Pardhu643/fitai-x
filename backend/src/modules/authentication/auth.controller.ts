@@ -4,7 +4,7 @@ import { registerSchema, loginSchema } from './auth.validation';
 import { AUTH_MESSAGES } from './auth.constants';
 
 export const authController = {
-  register: async (req: Request, res: Response): Promise<void> => {
+  register: async (req: Request, res: Response): Promise<any> => {
     const data = await registerSchema.parseAsync(req.body);
     const result = await authService.register(data);
 
@@ -15,7 +15,7 @@ export const authController = {
     });
   },
 
-  login: async (req: Request, res: Response): Promise<void> => {
+  login: async (req: Request, res: Response): Promise<any> => {
     const data = await loginSchema.parseAsync(req.body);
     const result = await authService.login(data);
 
@@ -26,14 +26,14 @@ export const authController = {
     });
   },
 
-  logout: async (_req: Request, res: Response): Promise<void> => {
+  logout: async (_req: Request, res: Response): Promise<any> => {
     res.status(200).json({
       success: true,
       message: AUTH_MESSAGES.LOGOUT_SUCCESS,
     });
   },
 
-  me: async (req: Request, res: Response): Promise<void> => {
+  me: async (req: Request, res: Response): Promise<any> => {
     const userId = (req as any).user.userId;
     const user = await authService.getCurrentUser(userId);
 

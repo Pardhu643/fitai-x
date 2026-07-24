@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { logger } from '../../core/logger/logger';
 
 export const healthController = {
-  getHealth: (req: Request, res: Response): void => {
+  getHealth: (req: Request, res: Response): any => {
     const healthData = {
       status: 'ok',
       application: 'FitAI X',
@@ -12,6 +12,6 @@ export const healthController = {
     };
 
     logger.info('Health check accessed', { path: req.path });
-    res.status(200).json(healthData);
+    return res.status(200).json(healthData);
   },
 };

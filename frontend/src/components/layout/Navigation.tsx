@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Dumbbell, Calendar, TrendingUp, Utensils, Settings, LogOut, Target, Droplet, Sparkles, ChevronRight } from 'lucide-react';
+import { Dumbbell, Calendar, TrendingUp, Utensils, Settings, LogOut, Target, Droplet, Sparkles, ChevronRight, MessageSquare, Brain, CheckSquare } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { useAuthStore } from '../../store/authStore';
 import { useQueryClient } from '@tanstack/react-query';
@@ -14,8 +14,11 @@ export function Navigation() {
 
   const navLinks = [
     { to: '/dashboard', label: 'Dashboard', icon: TrendingUp },
-    { to: '/workouts', label: 'Workouts', icon: Dumbbell },
+    { to: '/coach', label: 'AI Coach', icon: MessageSquare },
+    { to: '/habits', label: 'Habits', icon: CheckSquare },
     { to: '/calendar', label: 'Calendar', icon: Calendar },
+    { to: '/workouts', label: 'Workouts', icon: Dumbbell },
+    { to: '/memory', label: 'Memory', icon: Brain },
     { to: '/goals', label: 'Goals', icon: Target },
     { to: '/nutrition', label: 'Nutrition', icon: Utensils },
     { to: '/recovery', label: 'Recovery', icon: Droplet },

@@ -21,6 +21,10 @@ import { DecisionExplanationsPage } from '../features/workouts/DecisionExplanati
 import { NutritionPage } from '../features/nutrition/NutritionPage';
 import { GoalsPage } from '../features/goals/GoalsPage';
 import { CalendarPage } from '../features/calendar/CalendarPage';
+import { CoachPage } from '../features/coach/CoachPage';
+import { MemoryPage } from '../features/memories/MemoryPage';
+import { HabitsPage } from '../features/habits/HabitsPage';
+
 
 export const router = createBrowserRouter([
   // Public/unauthenticated landing page (no AppLayout)
@@ -100,6 +104,9 @@ export const router = createBrowserRouter([
       { path: 'settings', element: <ProfilePage /> },
       { path: 'goals', element: <GoalsPage /> },
       { path: 'calendar', element: <CalendarPage /> },
+      { path: 'coach', element: <CoachPage /> },
+      { path: 'memory', element: <MemoryPage /> },
+      { path: 'habits', element: <HabitsPage /> },
     ],
   },
 

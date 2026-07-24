@@ -4,12 +4,12 @@ import { onboardingSchema } from './onboarding.validation';
 import { AuthRequest } from '../../middleware/authenticate.middleware';
 
 export const onboardingController = {
-  completeOnboarding: async (req: Request, res: Response): Promise<void> => {
+  completeOnboarding: async (req: Request, res: Response): Promise<any> => {
     const userId = (req as AuthRequest).user.userId;
     const data = await onboardingSchema.parseAsync(req.body);
     await onboardingService.completeOnboarding(userId, data);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Onboarding completed successfully',
       data: {
@@ -19,11 +19,11 @@ export const onboardingController = {
     });
   },
 
-  getOnboardingStatus: async (req: Request, res: Response): Promise<void> => {
+  getOnboardingStatus: async (req: Request, res: Response): Promise<any> => {
     const userId = (req as AuthRequest).user.userId;
     const status = await onboardingService.getOnboardingStatus(userId);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: status,
     });

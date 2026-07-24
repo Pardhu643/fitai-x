@@ -100,6 +100,11 @@ model User {
   workoutSessions        WorkoutSession[]
   recoveryEntries        RecoveryEntry[]
   planChangeExplanations PlanChangeExplanation[]
+  coachConversations     CoachConversation[]
+  habits                 Habit[]
+  calendarEvents         CalendarEvent[]
+  notifications          Notification[]
+  aiMemories             AIMemory[]
 
   @@map("users")
 }
@@ -377,3 +382,116 @@ model PlanChangeExplanation {
 
   @@map("plan_change_explanations")
 }
+
+model CoachConversation {
+  id        String         @id @default(cuid())
+  userId    String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  messages  CoachMessage[]
+
+  @@map("coach_conversations")
+}
+
+model CoachMessage {
+  id             String            @id @default(cuid())
+  conversationId String
+  conversation   CoachConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String // "USER", "ASSISTANT", "SYSTEM"
+  content        String
+  intent         String?
+  metadata       Json?
+  createdAt      DateTime          @default(now())
+
+  @@map("coach_messages")
+}
+
+model AIMemory {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type       String // "PROFILE_CHANGE", "FITNESS_PREFERENCE", etc.
+  title      String
+  summary    String
+  source     String?
+  importance String    @default("NORMAL") // "NORMAL", "HIGH"
+  occurredAt DateTime  @default(now())
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@map("ai_memories")
+}
+
+model Habit {
+  id          String     @id @default(cuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  category    String // "WATER", "SLEEP", etc.
+  targetValue Float
+  unit        String
+  frequency   String     @default("DAILY")
+  active      Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  logs        HabitLog[]
+
+  @@map("habits")
+}
+
+model HabitLog {
+  id        String   @id @default(cuid())
+  habitId   String
+  habit     Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  userId    String
+  value     Float
+  completed Boolean  @default(false)
+  logDate   DateTime @default(now())
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([habitId, logDate])
+  @@map("habit_logs")
+}
+
+model CalendarEvent {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title           String
+  description     String?
+  type            String // "WORKOUT", "RECOVERY", "HABIT", etc.
+  startTime       DateTime
+  endTime         DateTime
+  allDay          Boolean  @default(false)
+  status          String   @default("SCHEDULED")
+  workoutPlanId   String?
+  workoutDayId    String?
+  reminderMinutes Int?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("calendar_events")
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String // "WORKOUT_REMINDER", etc.
+  title     String
+  message   String
+  actionUrl String?
+  read      Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  readAt    DateTime?
+  expiresAt DateTime?
+
+  @@map("notifications")
+}
+
