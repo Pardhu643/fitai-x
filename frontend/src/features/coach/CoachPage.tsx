@@ -1,41 +1,66 @@
 import { useState, useEffect, useRef } from 'react';
 import { coachService, ChatMessage } from '../../services/coach.service';
 import { Card } from '../../components/ui/Card';
-import { Send, Bot, User, Sparkles } from 'lucide-react';
+import { Send, Bot, User, Sparkles, AlertTriangle, RefreshCw } from 'lucide-react';
 
 export function CoachPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  const handleSend = async (customPrompt?: string) => {
+    const textToSend = customPrompt || input;
+    if (!textToSend.trim() || isLoading) return;
     
-    const userMessage: ChatMessage = { role: 'user', content: input };
+    setErrorMsg('');
+    const userMessage: ChatMessage = { role: 'user', content: textToSend };
     setMessages(prev => [...prev, userMessage]);
-    setInput('');
+    
+    // Clear input if sending normal message
+    if (!customPrompt) {
+      setInput('');
+    }
+    
     setIsLoading(true);
 
     try {
-      const res = await coachService.chat(input, messages);
-      setMessages(prev => [...prev, { role: 'assistant', content: res.data?.reply || 'Error from Rachel' }]);
-    } catch (err) {
+      const res = await coachService.chat(textToSend, messages);
+      if (res.data?.reply) {
+        setMessages(prev => [...prev, { role: 'assistant', content: res.data.reply }]);
+      } else {
+        throw new Error('No reply from Rachel');
+      }
+    } catch (err: any) {
       console.error(err);
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I am having trouble connecting right now.' }]);
+      const backendError = err.response?.data?.error;
+      if (backendError && (backendError.includes('API key') || backendError.includes('configured'))) {
+        setErrorMsg('Rachel is temporarily unavailable because the AI service is not configured.');
+      } else {
+        setErrorMsg('Rachel is temporarily unavailable. Please try again shortly.');
+      }
+      
+      // Preserve message back to input box
+      if (!customPrompt) {
+        setInput(textToSend);
+      }
+      
+      // Remove the last user message from conversation display so they can resend cleanly
+      setMessages(prev => prev.slice(0, -1));
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="container-custom py-8 max-w-4xl h-[calc(100vh-6rem)] flex flex-col">
+    <div className="max-w-[1100px] mx-auto py-8 px-4 h-[calc(100vh-6rem)] flex flex-col">
       <div className="mb-6 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-[#FFC400] flex items-center justify-center text-black">
+        <div className="w-10 h-10 rounded-xl bg-[#FFC400] flex items-center justify-center text-black shadow-lg shadow-[#FFC400]/10">
           <Bot size={24} />
         </div>
         <div>
@@ -44,15 +69,27 @@ export function CoachPage() {
         </div>
       </div>
       
-      <Card className="flex-1 flex flex-col overflow-hidden bg-[#10151D] border-white/5">
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <Card className="flex-1 flex flex-col overflow-hidden bg-[#10151D] border-white/5 rounded-2xl">
+        <div className="flex-grow overflow-y-auto p-4 space-y-4">
           {messages.length === 0 && (
-            <div className="h-full flex flex-col items-center justify-center text-center space-y-4 text-[#A8B0BF]">
+            <div className="h-full flex flex-col items-center justify-center text-center space-y-4 text-[#A8B0BF] p-6">
               <Sparkles className="text-[#FFC400] w-12 h-12 mb-2 opacity-50" />
-              <p>Hi! I'm Rachel. How can I help you crush your goals today?</p>
+              <p className="max-w-md text-sm leading-relaxed">Hi! I'm Rachel, your AI fitness coach. How can I help you crush your goals today?</p>
               <div className="flex flex-wrap gap-2 justify-center mt-4">
-                <button onClick={() => setInput("What should I eat before my workout?")} className="bg-[#171D26] hover:bg-white/10 px-4 py-2 rounded-full text-xs text-white transition">What should I eat before my workout?</button>
-                <button onClick={() => setInput("My legs are sore. Any recovery tips?")} className="bg-[#171D26] hover:bg-white/10 px-4 py-2 rounded-full text-xs text-white transition">My legs are sore. Any recovery tips?</button>
+                <button 
+                  onClick={() => handleSend("What should I eat before my workout?")} 
+                  disabled={isLoading}
+                  className="bg-[#171D26] hover:bg-white/5 border border-white/5 px-4 py-2 rounded-full text-xs text-white transition disabled:opacity-50"
+                >
+                  What should I eat before my workout?
+                </button>
+                <button 
+                  onClick={() => handleSend("My legs are sore. Any recovery tips?")} 
+                  disabled={isLoading}
+                  className="bg-[#171D26] hover:bg-white/5 border border-white/5 px-4 py-2 rounded-full text-xs text-white transition disabled:opacity-50"
+                >
+                  My legs are sore. Any recovery tips?
+                </button>
               </div>
             </div>
           )}
@@ -90,18 +127,37 @@ export function CoachPage() {
           <div ref={messagesEndRef} />
         </div>
         
+        {/* Error warning bar */}
+        {errorMsg && (
+          <div className="mx-4 mb-2 p-3 bg-[#FF5E5E]/10 border border-[#FF5E5E]/20 rounded-xl flex items-center justify-between gap-3 animate-fadeIn">
+            <div className="flex items-center gap-2 text-xs text-[#FF5E5E]">
+              <AlertTriangle size={16} />
+              <span>{errorMsg}</span>
+            </div>
+            {input && (
+              <button 
+                onClick={() => handleSend()}
+                className="text-xs text-white hover:text-[#FFC400] font-bold flex items-center gap-1 transition"
+              >
+                <RefreshCw size={12} className="animate-spin-slow" /> Retry
+              </button>
+            )}
+          </div>
+        )}
+
         <div className="p-4 border-t border-white/5 bg-[#10151D]">
           <div className="flex gap-2 items-center bg-[#171D26] rounded-xl p-2 border border-white/5 focus-within:border-white/20 transition-colors">
             <input 
               type="text" 
               value={input}
+              disabled={isLoading}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSend()}
               placeholder="Ask Rachel anything..."
-              className="flex-1 bg-transparent border-none focus:outline-none text-white px-2 placeholder-[#A8B0BF]"
+              className="flex-1 bg-transparent border-none focus:outline-none text-white px-2 placeholder-[#A8B0BF] text-sm disabled:opacity-50"
             />
             <button 
-              onClick={handleSend}
+              onClick={() => handleSend()}
               disabled={!input.trim() || isLoading}
               className="bg-[#FFC400] text-black p-2 rounded-lg disabled:opacity-50 hover:bg-[#FFD43B] transition-colors"
             >

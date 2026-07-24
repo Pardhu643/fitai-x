@@ -12,18 +12,15 @@ export class GeminiService {
 
   async generateCoachResponse(prompt: string, context?: any): Promise<string> {
     if (!process.env.GEMINI_API_KEY) {
-      return 'AI Coach is temporarily offline.';
+      throw new Error('API key not configured');
     }
 
-    try {
-      const fullPrompt = `You are Rachel, an AI Fitness Coach.\nContext: ${JSON.stringify(context || {})}\n\nUser: ${prompt}`;
-      const result = await this.model.generateContent(fullPrompt);
-      const response = await result.response;
-      return response.text();
-    } catch (error) {
-      console.error('Error in Gemini AI Service:', error);
-      return 'AI Coach is temporarily offline.';
-    }
+    const fullPrompt = `You are Rachel, an AI Fitness Coach. Ground your response in the provided user context where appropriate. Keep responses concise and practical. Distinguish general fitness advice from stored user data.\nContext: ${JSON.stringify(context || {})}\n\nUser: ${prompt}`;
+    
+    // Google Gen AI API call
+    const result = await this.model.generateContent(fullPrompt);
+    const response = await result.response;
+    return response.text();
   }
 }
 export const geminiService = new GeminiService();
