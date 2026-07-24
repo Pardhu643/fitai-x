@@ -5,8 +5,15 @@ export const habitService = {
     const response = await api.get('/api/v1/smart-habits');
     return response.data.data?.habits || [];
   },
-  createHabit: async (name: string, type: string) => {
-    const response = await api.post('/api/v1/smart-habits', { name, type });
+  createHabit: async (data: { 
+    name: string; 
+    description?: string; 
+    category?: string; 
+    targetValue?: number; 
+    unit?: string; 
+    frequency?: string;
+  }) => {
+    const response = await api.post('/api/v1/smart-habits', data);
     return response.data.data?.habit;
   },
   updateHabit: async (id: string, data: any) => {

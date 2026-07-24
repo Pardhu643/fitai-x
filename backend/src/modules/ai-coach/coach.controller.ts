@@ -7,7 +7,7 @@ const asyncHandler = (fn: any) => (req: Request, res: Response, next: NextFuncti
 };
 
 export const coachController = {
-  chat: asyncHandler(async (req: Request, res: Response) => {
+  chat: asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const { prompt, message } = req.body;
     const activePrompt = prompt || message;
     const userId = (req as any).user?.userId || (req as any).user?.id; // fallback based on auth middleware shape
@@ -32,7 +32,7 @@ export const coachController = {
 
     try {
       const reply = await geminiService.generateCoachResponse(activePrompt, context);
-      return res.json({ reply });
+      return res.json({ data: { reply } });
     } catch (err: any) {
       if (err.message?.includes('API key')) {
         return res.status(503).json({ error: 'AI Coach is temporarily offline (API key not configured)' });
