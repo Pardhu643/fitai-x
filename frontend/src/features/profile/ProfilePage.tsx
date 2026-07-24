@@ -68,19 +68,19 @@ export function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#090909] flex items-center justify-center">
+      <div className="min-h-screen bg-[#080B10] flex items-center justify-center">
         <Loader size="lg" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 pb-12 max-w-[1100px] mx-auto bg-[#090909]">
+    <div className="space-y-8 pb-12 max-w-[1100px] mx-auto bg-[#080B10]">
       {/* Header */}
       <div>
         <span className="text-xs font-bold text-[#FFC400] tracking-widest uppercase">Settings</span>
-        <h1 className="text-3xl font-extrabold text-[#F5F5F5] mt-1">Profile & Settings</h1>
-        <p className="text-[#9CA3AF] text-sm mt-1">Manage your personal information and fitness preferences</p>
+        <h1 className="text-3xl font-extrabold text-[#F8FAFC] mt-1">Profile & Settings</h1>
+        <p className="text-[#A8B0BF] text-sm mt-1">Manage your personal information and fitness preferences</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
@@ -88,14 +88,14 @@ export function ProfilePage() {
           
           {/* Left Column: Summary Card */}
           <div className="space-y-6">
-            <Card variant="bordered" className="bg-[#17191F] border border-white/5 p-6 rounded-2xl flex flex-col items-center text-center">
+            <Card variant="bordered" className="bg-[#10151D] border border-white/5 p-6 rounded-2xl flex flex-col items-center text-center">
               <div className="w-20 h-20 rounded-full bg-[#FFC400] text-black font-extrabold flex items-center justify-center text-2xl shadow-lg shadow-[#FFC400]/10 mb-4 select-none">
                 {user?.name?.[0]?.toUpperCase() || 'U'}
               </div>
-              <h2 className="text-lg font-bold text-[#F5F5F5]">{user?.name}</h2>
-              <p className="text-xs text-[#9CA3AF] mt-0.5">{user?.email}</p>
+              <h2 className="text-lg font-bold text-[#F8FAFC]">{user?.name}</h2>
+              <p className="text-xs text-[#A8B0BF] mt-0.5">{user?.email}</p>
               
-              <div className="mt-4 flex items-center gap-1.5 bg-white/5 border border-white/5 px-3 py-1 rounded-xl">
+              <div className="mt-4 flex items-center gap-1.5 bg-[#151B24] border border-white/5 px-3 py-1 rounded-xl">
                 <Shield size={14} className="text-[#FFC400]" />
                 <span className="text-[10px] font-bold text-gray-300 uppercase tracking-wider">Pro Member</span>
               </div>
@@ -106,8 +106,8 @@ export function ProfilePage() {
           <div className="lg:col-span-2 space-y-6">
             
             {/* Personal Information */}
-            <Card variant="bordered" className="bg-[#17191F] border border-white/5 p-6 rounded-2xl space-y-6">
-              <h3 className="text-base font-bold text-[#F5F5F5] flex items-center gap-2 border-b border-white/5 pb-3">
+            <Card variant="bordered" className="bg-[#10151D] border border-white/5 p-6 rounded-2xl space-y-6">
+              <h3 className="text-base font-bold text-[#F8FAFC] flex items-center gap-2 border-b border-white/5 pb-3">
                 <User size={18} className="text-[#FFC400]" />
                 Personal Information
               </h3>
@@ -119,7 +119,7 @@ export function ProfilePage() {
                     type="text"
                     placeholder="John Doe"
                     error={errors.name?.message}
-                    className="bg-[#1D1F24] border-white/5 text-[#F5F5F5] placeholder-[#6B7280]"
+                    className="bg-[#171D26] border-white/5 text-[#F8FAFC] placeholder-[#6F7887]"
                     {...register('name')}
                   />
                 </div>
@@ -130,23 +130,23 @@ export function ProfilePage() {
                     type="number"
                     placeholder="25"
                     error={errors.age?.message}
-                    className="bg-[#1D1F24] border-white/5 text-[#F5F5F5] placeholder-[#6B7280]"
+                    className="bg-[#171D26] border-white/5 text-[#F8FAFC] placeholder-[#6F7887]"
                     {...register('age', { valueAsNumber: true })}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#9CA3AF] uppercase tracking-wide mb-2">Gender</label>
+                  <label className="block text-xs font-bold text-[#A8B0BF] uppercase tracking-wide mb-2">Gender</label>
                   <select
                     {...register('gender')}
-                    className="w-full h-[48px] px-3 py-2 bg-[#1D1F24] text-[#F5F5F5] border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
+                    className="w-full h-[48px] px-3 py-2 bg-[#171D26] text-[#F8FAFC] border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
                     style={{ colorScheme: 'dark' }}
                   >
-                    <option value="" className="bg-[#1D1F24] text-[#9CA3AF]">Select gender</option>
-                    <option value="MALE" className="bg-[#1D1F24] text-[#F5F5F5]">Male</option>
-                    <option value="FEMALE" className="bg-[#1D1F24] text-[#F5F5F5]">Female</option>
-                    <option value="OTHER" className="bg-[#1D1F24] text-[#F5F5F5]">Other</option>
-                    <option value="PREFER_NOT_TO_SAY" className="bg-[#1D1F24] text-[#F5F5F5]">Prefer not to say</option>
+                    <option value="" className="bg-[#171D26] text-[#A8B0BF]">Select gender</option>
+                    <option value="MALE" className="bg-[#171D26] text-[#F8FAFC]">Male</option>
+                    <option value="FEMALE" className="bg-[#171D26] text-[#F8FAFC]">Female</option>
+                    <option value="OTHER" className="bg-[#171D26] text-[#F8FAFC]">Other</option>
+                    <option value="PREFER_NOT_TO_SAY" className="bg-[#171D26] text-[#F8FAFC]">Prefer not to say</option>
                   </select>
                   {errors.gender && (
                     <p className="mt-1.5 text-xs text-[#FF5E5E]">{errors.gender.message}</p>
@@ -159,7 +159,7 @@ export function ProfilePage() {
                     type="number"
                     placeholder="175"
                     error={errors.heightCm?.message}
-                    className="bg-[#1D1F24] border-white/5 text-[#F5F5F5] placeholder-[#6B7280]"
+                    className="bg-[#171D26] border-white/5 text-[#F8FAFC] placeholder-[#6F7887]"
                     {...register('heightCm', { valueAsNumber: true })}
                   />
                 </div>
@@ -170,7 +170,7 @@ export function ProfilePage() {
                     type="number"
                     placeholder="70"
                     error={errors.weightKg?.message}
-                    className="bg-[#1D1F24] border-white/5 text-[#F5F5F5] placeholder-[#6B7280]"
+                    className="bg-[#171D26] border-white/5 text-[#F8FAFC] placeholder-[#6F7887]"
                     {...register('weightKg', { valueAsNumber: true })}
                   />
                 </div>
@@ -178,24 +178,24 @@ export function ProfilePage() {
             </Card>
 
             {/* Fitness Preferences */}
-            <Card variant="bordered" className="bg-[#17191F] border border-white/5 p-6 rounded-2xl space-y-6">
-              <h3 className="text-base font-bold text-[#F5F5F5] flex items-center gap-2 border-b border-white/5 pb-3">
+            <Card variant="bordered" className="bg-[#10151D] border border-white/5 p-6 rounded-2xl space-y-6">
+              <h3 className="text-base font-bold text-[#F8FAFC] flex items-center gap-2 border-b border-white/5 pb-3">
                 <Dumbbell size={18} className="text-[#FFC400]" />
                 Fitness Preferences
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-xs font-bold text-[#9CA3AF] uppercase tracking-wide mb-2">Fitness Level</label>
+                  <label className="block text-xs font-bold text-[#A8B0BF] uppercase tracking-wide mb-2">Fitness Level</label>
                   <select
                     {...register('fitnessLevel')}
-                    className="w-full h-[48px] px-3 py-2 bg-[#1D1F24] text-[#F5F5F5] border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
+                    className="w-full h-[48px] px-3 py-2 bg-[#171D26] text-[#F8FAFC] border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
                     style={{ colorScheme: 'dark' }}
                   >
-                    <option value="" className="bg-[#1D1F24] text-[#9CA3AF]">Select fitness level</option>
-                    <option value="BEGINNER" className="bg-[#1D1F24] text-[#F5F5F5]">Beginner</option>
-                    <option value="INTERMEDIATE" className="bg-[#1D1F24] text-[#F5F5F5]">Intermediate</option>
-                    <option value="ADVANCED" className="bg-[#1D1F24] text-[#F5F5F5]">Advanced</option>
+                    <option value="" className="bg-[#171D26] text-[#A8B0BF]">Select fitness level</option>
+                    <option value="BEGINNER" className="bg-[#171D26] text-[#F8FAFC]">Beginner</option>
+                    <option value="INTERMEDIATE" className="bg-[#171D26] text-[#F8FAFC]">Intermediate</option>
+                    <option value="ADVANCED" className="bg-[#171D26] text-[#F8FAFC]">Advanced</option>
                   </select>
                   {errors.fitnessLevel && (
                     <p className="mt-1.5 text-xs text-[#FF5E5E]">{errors.fitnessLevel.message}</p>
@@ -203,19 +203,19 @@ export function ProfilePage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#9CA3AF] uppercase tracking-wide mb-2">Primary Goal</label>
+                  <label className="block text-xs font-bold text-[#A8B0BF] uppercase tracking-wide mb-2">Primary Goal</label>
                   <select
                     {...register('primaryGoal')}
-                    className="w-full h-[48px] px-3 py-2 bg-[#1D1F24] text-[#F5F5F5] border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
+                    className="w-full h-[48px] px-3 py-2 bg-[#171D26] text-[#F8FAFC] border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
                     style={{ colorScheme: 'dark' }}
                   >
-                    <option value="" className="bg-[#1D1F24] text-[#9CA3AF]">Select primary goal</option>
-                    <option value="WEIGHT_LOSS" className="bg-[#1D1F24] text-[#F5F5F5]">Weight Loss</option>
-                    <option value="MUSCLE_GAIN" className="bg-[#1D1F24] text-[#F5F5F5]">Muscle Gain</option>
-                    <option value="ENDURANCE" className="bg-[#1D1F24] text-[#F5F5F5]">Endurance</option>
-                    <option value="STRENGTH" className="bg-[#1D1F24] text-[#F5F5F5]">Strength</option>
-                    <option value="FLEXIBILITY" className="bg-[#1D1F24] text-[#F5F5F5]">Flexibility</option>
-                    <option value="GENERAL_FITNESS" className="bg-[#1D1F24] text-[#F5F5F5]">General Fitness</option>
+                    <option value="" className="bg-[#171D26] text-[#A8B0BF]">Select primary goal</option>
+                    <option value="WEIGHT_LOSS" className="bg-[#171D26] text-[#F8FAFC]">Weight Loss</option>
+                    <option value="MUSCLE_GAIN" className="bg-[#171D26] text-[#F8FAFC]">Muscle Gain</option>
+                    <option value="ENDURANCE" className="bg-[#171D26] text-[#F8FAFC]">Endurance</option>
+                    <option value="STRENGTH" className="bg-[#171D26] text-[#F8FAFC]">Strength</option>
+                    <option value="FLEXIBILITY" className="bg-[#171D26] text-[#F8FAFC]">Flexibility</option>
+                    <option value="GENERAL_FITNESS" className="bg-[#171D26] text-[#F8FAFC]">General Fitness</option>
                   </select>
                   {errors.primaryGoal && (
                     <p className="mt-1.5 text-xs text-[#FF5E5E]">{errors.primaryGoal.message}</p>
@@ -229,7 +229,7 @@ export function ProfilePage() {
               <Button 
                 type="submit" 
                 isLoading={isSubmitting}
-                className="bg-[#FFC400] text-black hover:bg-[#e0ad00] font-bold rounded-xl px-8 py-3.5 flex items-center gap-2 text-xs shadow-lg shadow-[#FFC400]/10"
+                className="bg-[#FFC400] text-black hover:bg-[#FFD43B] font-bold rounded-xl px-8 py-3.5 flex items-center gap-2 text-xs shadow-lg shadow-[#FFC400]/10"
               >
                 <Save size={16} />
                 Save Changes

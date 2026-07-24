@@ -4,7 +4,23 @@
 
 @layer base {
   body {
-    @apply bg-[#090909] text-white antialiased;
+    @apply bg-[#080B10] text-[#F8FAFC] antialiased;
+    color-scheme: dark;
+  }
+
+  /* Autofill dark theme fix */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus {
+    -webkit-text-fill-color: #F8FAFC !important;
+    -webkit-box-shadow: 0 0 0 1000px #171D26 inset !important;
+    transition: background-color 9999s ease-in-out 0s;
   }
 }
 

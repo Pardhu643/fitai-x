@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Dumbbell, Calendar, TrendingUp, Flame, Target, Play, Plus, Settings, Clock, Heart } from 'lucide-react';
+import { Dumbbell, Calendar, TrendingUp, Flame, Target, Play, Plus, Clock, Heart } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { StatisticsCard } from '../../components/ui/StatisticsCard';
@@ -34,8 +34,8 @@ export function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#090909] flex items-center justify-center">
-        <div className="text-gray-400 font-medium">Loading dashboard...</div>
+      <div className="min-h-screen bg-[#080B10] flex items-center justify-center">
+        <div className="text-[#A8B0BF] font-bold text-xs uppercase tracking-wider">Loading dashboard...</div>
       </div>
     );
   }
@@ -57,7 +57,7 @@ export function DashboardPage() {
   const currentGoal = dashboardData?.currentGoal;
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-8 pb-12 bg-[#080B10]">
       {/* Header greetings */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
@@ -65,7 +65,7 @@ export function DashboardPage() {
           <h1 className="text-3xl font-extrabold text-white mt-1">
             Welcome back, {user?.name?.split(' ')[0] || 'User'}! 👋
           </h1>
-          <p className="text-gray-400 text-sm mt-1">Here's your fitness overview for today.</p>
+          <p className="text-[#A8B0BF] text-sm mt-1">Here's your fitness overview for today.</p>
         </div>
       </div>
 
@@ -99,15 +99,15 @@ export function DashboardPage() {
           label="Total Minutes"
           value={stats.totalMinutes}
           change={`+${stats.thisWeekMinutes} this week`}
-          iconColor="text-[#FFC400]"
-          bgColor="bg-[#FFC400]/15"
+          iconColor="text-[#32D5F4]"
+          bgColor="bg-[#32D5F4]/15"
         />
       </div>
 
       {/* Today's Workout & Recovery Score */}
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <Card variant="bordered" className="bg-[#151515] border-[#1B1B1B] h-full flex flex-col justify-between p-6 rounded-2xl">
+          <Card variant="bordered" className="bg-[#10151D] border-white/5 h-full flex flex-col justify-between p-6 rounded-2xl">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
                 <Dumbbell className="text-[#FFC400]" size={22} />
@@ -116,7 +116,7 @@ export function DashboardPage() {
               {todayWorkout ? (
                 <Button 
                   onClick={() => navigate(`/workouts/day/${todayWorkout.id}`)}
-                  className="bg-[#FFC400] text-black hover:bg-[#e0ad00] font-bold rounded-xl px-4 py-2 flex items-center gap-2 text-xs"
+                  className="bg-[#FFC400] text-black hover:bg-[#FFD43B] font-bold rounded-xl px-4 py-2 flex items-center gap-2 text-xs"
                 >
                   <Play size={14} fill="black" />
                   Start Workout
@@ -124,7 +124,7 @@ export function DashboardPage() {
               ) : (
                 <Button 
                   onClick={() => navigate('/workouts/generate')}
-                  className="bg-[#FFC400] text-black hover:bg-[#e0ad00] font-bold rounded-xl px-4 py-2 flex items-center gap-2 text-xs"
+                  className="bg-[#FFC400] text-black hover:bg-[#FFD43B] font-bold rounded-xl px-4 py-2 flex items-center gap-2 text-xs animate-pulse"
                 >
                   <Plus size={14} />
                   Generate Plan
@@ -132,31 +132,31 @@ export function DashboardPage() {
               )}
             </div>
             {todayWorkout ? (
-              <div className="bg-[#1B1B1B] border border-[#222] rounded-2xl p-6 relative overflow-hidden group">
+              <div className="bg-[#151B24] border border-white/5 rounded-2xl p-6 relative overflow-hidden group">
                 <div className="absolute -right-16 -bottom-16 w-48 h-48 bg-[#FFC400]/5 rounded-full blur-2xl group-hover:bg-[#FFC400]/10 transition-all duration-300"></div>
                 <h3 className="text-xl font-bold text-white mb-2">{todayWorkout.name}</h3>
-                <div className="flex items-center gap-4 text-sm text-gray-400">
-                  <span className="flex items-center gap-1.5 bg-[#151515] px-3 py-1.5 rounded-xl border border-[#222]">
+                <div className="flex items-center gap-4 text-sm text-[#A8B0BF]">
+                  <span className="flex items-center gap-1.5 bg-[#10151D] px-3 py-1.5 rounded-xl border border-white/5">
                     <Clock size={15} className="text-[#FFC400]" />
                     {todayWorkout.durationMinutes || 45} min
                   </span>
-                  <span className="flex items-center gap-1.5 bg-[#151515] px-3 py-1.5 rounded-xl border border-[#222]">
+                  <span className="flex items-center gap-1.5 bg-[#10151D] px-3 py-1.5 rounded-xl border border-white/5">
                     <Dumbbell size={15} className="text-[#FFC400]" />
                     {todayWorkout.workoutExercises?.length || 6} exercises
                   </span>
                 </div>
               </div>
             ) : (
-              <div className="text-center py-10 bg-[#1B1B1B] border border-[#222] rounded-2xl">
-                <Dumbbell size={40} className="mx-auto mb-3 text-gray-600" />
+              <div className="text-center py-10 bg-[#151B24] border border-white/5 rounded-2xl">
+                <Dumbbell size={40} className="mx-auto mb-3 text-[#6F7887]" />
                 <h4 className="text-sm font-bold text-white">No active plan scheduled</h4>
-                <p className="text-xs text-gray-400 mt-1">Generate a dynamic plan customized for you.</p>
+                <p className="text-xs text-[#A8B0BF] mt-1">Generate a dynamic plan customized for you.</p>
               </div>
             )}
           </Card>
         </div>
 
-        <Card variant="bordered" className="bg-[#151515] border-[#1B1B1B] p-6 rounded-2xl flex flex-col justify-between">
+        <Card variant="bordered" className="bg-[#10151D] border-white/5 p-6 rounded-2xl flex flex-col justify-between">
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
             <Heart className="text-[#7CFF4D]" size={22} />
             Recovery Status
@@ -165,7 +165,7 @@ export function DashboardPage() {
             <ProgressRing progress={85} size={130} color="#7CFF4D" />
             <div className="text-center mt-4">
               <span className="text-lg font-bold text-white block">Ready to Train</span>
-              <p className="text-xs text-gray-400 mt-0.5">Based on sleep, stress & activity</p>
+              <p className="text-xs text-[#A8B0BF] mt-0.5">Based on sleep, stress & activity</p>
             </div>
           </div>
         </Card>
@@ -173,34 +173,34 @@ export function DashboardPage() {
 
       {/* Weight Progress & Goals */}
       <div className="grid lg:grid-cols-2 gap-8">
-        <Card variant="bordered" className="bg-[#151515] border-[#1B1B1B] p-6 rounded-2xl">
+        <Card variant="bordered" className="bg-[#10151D] border-white/5 p-6 rounded-2xl">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-white">Weight Progress</h2>
             <Button 
               variant="outline" 
               size="sm" 
-              onClick={() => navigate('/profile')}
-              className="border-[#1B1B1B] hover:bg-[#1B1B1B] text-gray-300 font-bold rounded-xl text-xs"
+              onClick={() => navigate('/settings')}
+              className="border-white/5 hover:bg-[#151B24] text-gray-300 font-bold rounded-xl text-xs"
             >
               <Plus size={14} className="mr-1.5" />
               Update Profile
             </Button>
           </div>
-          <div className="bg-[#1B1B1B] border border-[#222] p-4 rounded-xl">
+          <div className="bg-[#151B24] border border-white/5 p-4 rounded-xl">
             {weightProgress?.length > 0 ? (
               <WeightChart data={weightProgress.map((wp: any) => ({
                 date: new Date(wp.date).toLocaleDateString(),
                 weight: wp.weightKg,
               }))} />
             ) : (
-              <div className="text-center py-10 text-gray-500">
+              <div className="text-center py-10 text-[#A8B0BF] text-xs font-bold uppercase">
                 No logged weights found. Profile weight is currently set.
               </div>
             )}
           </div>
         </Card>
 
-        <Card variant="bordered" className="bg-[#151515] border-[#1B1B1B] p-6 rounded-2xl flex flex-col justify-between">
+        <Card variant="bordered" className="bg-[#10151D] border-white/5 p-6 rounded-2xl flex flex-col justify-between">
           <div>
             <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
               <Target className="text-[#FFC400]" size={22} />
@@ -208,22 +208,22 @@ export function DashboardPage() {
             </h2>
             {currentGoal ? (
               <div className="space-y-4">
-                <div className="flex items-center gap-4 bg-[#1B1B1B] border border-[#222] p-4 rounded-xl">
+                <div className="flex items-center gap-4 bg-[#151B24] border border-white/5 p-4 rounded-xl">
                   <div className="bg-[#FFC400]/10 p-2.5 rounded-xl border border-[#FFC400]/20">
                     <Target className="text-[#FFC400]" size={22} />
                   </div>
                   <div>
-                    <span className="text-xs text-gray-400 block font-semibold">Target Weight</span>
+                    <span className="text-xs text-[#A8B0BF] block font-semibold">Target Weight</span>
                     <span className="text-lg font-bold text-white">{currentGoal.targetWeightKg} kg</span>
                   </div>
                 </div>
                 {currentGoal.targetDate && (
-                  <div className="flex items-center gap-4 bg-[#1B1B1B] border border-[#222] p-4 rounded-xl">
-                    <div className="bg-blue-500/10 p-2.5 rounded-xl border border-blue-500/20">
-                      <Calendar className="text-blue-400" size={22} />
+                  <div className="flex items-center gap-4 bg-[#151B24] border border-white/5 p-4 rounded-xl">
+                    <div className="bg-[#32D5F4]/10 p-2.5 rounded-xl border border-[#32D5F4]/20">
+                      <Calendar className="text-[#32D5F4]" size={22} />
                     </div>
                     <div>
-                      <span className="text-xs text-gray-400 block font-semibold">Target Date</span>
+                      <span className="text-xs text-[#A8B0BF] block font-semibold">Target Date</span>
                       <span className="text-lg font-bold text-white">
                         {new Date(currentGoal.targetDate).toLocaleDateString()}
                       </span>
@@ -232,12 +232,12 @@ export function DashboardPage() {
                 )}
               </div>
             ) : (
-              <div className="text-center py-10 bg-[#1B1B1B] border border-[#222] rounded-2xl">
-                <Target size={40} className="mx-auto mb-3 text-gray-600" />
+              <div className="text-center py-10 bg-[#151B24] border border-white/5 rounded-2xl">
+                <Target size={40} className="mx-auto mb-3 text-[#6F7887]" />
                 <h4 className="text-sm font-bold text-white">No active goal set</h4>
                 <Button 
                   variant="outline" 
-                  className="mt-3 border-[#1B1B1B] hover:bg-[#1B1B1B] text-gray-300 font-bold rounded-xl text-xs" 
+                  className="mt-3 border-white/5 hover:bg-[#151B24] text-gray-300 font-bold rounded-xl text-xs" 
                   onClick={() => navigate('/goals')}
                 >
                   Set a Goal
@@ -250,14 +250,14 @@ export function DashboardPage() {
 
       {/* Activity Logs */}
       <div className="grid lg:grid-cols-2 gap-8">
-        <Card variant="bordered" className="bg-[#151515] border-[#1B1B1B] p-6 rounded-2xl">
+        <Card variant="bordered" className="bg-[#10151D] border-white/5 p-6 rounded-2xl">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-white">Recent Activity</h2>
             <Button 
               variant="outline" 
               size="sm" 
               onClick={() => navigate('/workouts/history')}
-              className="border-[#1B1B1B] hover:bg-[#1B1B1B] text-gray-300 font-bold rounded-xl text-xs"
+              className="border-white/5 hover:bg-[#151B24] text-gray-300 font-bold rounded-xl text-xs"
             >
               View All
             </Button>
@@ -265,10 +265,10 @@ export function DashboardPage() {
           <div className="space-y-3">
             {recentActivity.length > 0 ? (
               recentActivity.slice(0, 4).map((activity: any) => (
-                <div key={activity.id} className="flex items-center justify-between p-4 bg-[#1B1B1B] border border-[#222] rounded-xl hover:border-gray-700 transition-colors">
+                <div key={activity.id} className="flex items-center justify-between p-4 bg-[#151B24] border border-white/5 rounded-xl hover:border-white/10 transition-colors">
                   <div>
                     <p className="font-bold text-white text-sm">{activity.workoutName || 'Push Workout'}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <p className="text-xs text-[#A8B0BF] mt-0.5">
                       {new Date(activity.completedAt).toLocaleDateString()} • {activity.durationMinutes} min
                     </p>
                   </div>
@@ -280,92 +280,48 @@ export function DashboardPage() {
                 </div>
               ))
             ) : (
-              <div className="text-center py-10 bg-[#1B1B1B] border border-[#222] rounded-xl text-gray-400 text-sm">
+              <div className="text-center py-10 bg-[#151B24] border border-white/5 rounded-xl text-[#A8B0BF] text-xs font-bold uppercase">
                 No recent activity. Keep pushing!
               </div>
             )}
           </div>
         </Card>
 
-        <Card variant="bordered" className="bg-[#151515] border-[#1B1B1B] p-6 rounded-2xl">
+        <Card variant="bordered" className="bg-[#10151D] border-white/5 p-6 rounded-2xl">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-white">Upcoming Workouts</h2>
             <Button 
               variant="outline" 
               size="sm" 
               onClick={() => navigate('/calendar')}
-              className="border-[#1B1B1B] hover:bg-[#1B1B1B] text-gray-300 font-bold rounded-xl text-xs"
+              className="border-white/5 hover:bg-[#151B24] text-gray-300 font-bold rounded-xl text-xs"
             >
               View Calendar
             </Button>
           </div>
           <div className="space-y-3">
             {upcomingWorkouts.length > 0 ? (
-              upcomingWorkouts.map((workout: any) => (
-                <div key={workout.id} className="flex items-center justify-between p-4 bg-[#1B1B1B] border border-[#222] rounded-xl">
+              upcomingWorkouts.map((workout: any, idx: number) => (
+                <div key={idx} className="flex items-center justify-between p-4 bg-[#151B24] border border-white/5 rounded-xl">
                   <div>
                     <p className="font-bold text-white text-sm">{workout.name}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">
-                      {workout.durationMinutes} min • {workout.exercisesCount} exercises
+                    <p className="text-xs text-[#A8B0BF] mt-0.5">
+                      Day {workout.dayNumber} • {workout.focus}
                     </p>
                   </div>
+                  <span className="text-[10px] font-bold text-[#FFC400] uppercase bg-[#FFC400]/10 border border-[#FFC400]/20 px-2 py-0.5 rounded">
+                    Scheduled
+                  </span>
                 </div>
               ))
             ) : (
-              <div className="text-center py-10 bg-[#1B1B1B] border border-[#222] rounded-xl text-gray-400 text-sm">
+              <div className="text-center py-10 bg-[#151B24] border border-white/5 rounded-xl text-[#A8B0BF] text-xs font-bold uppercase">
                 No upcoming workouts scheduled.
               </div>
             )}
           </div>
         </Card>
       </div>
-
-      {/* Quick Actions Grid */}
-      <Card variant="bordered" className="bg-[#151515] border-[#1B1B1B] p-6 rounded-2xl">
-        <h2 className="text-xl font-bold text-white mb-6">Quick Actions</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <button
-            onClick={() => navigate('/workouts')}
-            className="p-5 bg-[#1B1B1B] border border-[#222] rounded-2xl hover:border-[#FFC400] transition-colors text-left flex flex-col justify-between h-32 group"
-          >
-            <Dumbbell className="text-[#FFC400] mb-2 group-hover:scale-110 transition-transform" size={26} />
-            <div>
-              <h3 className="font-bold text-white text-sm">Workouts</h3>
-              <p className="text-[11px] text-gray-400 mt-0.5">View your workout plans</p>
-            </div>
-          </button>
-          <button
-            onClick={() => navigate('/calendar')}
-            className="p-5 bg-[#1B1B1B] border border-[#222] rounded-2xl hover:border-[#FFC400] transition-colors text-left flex flex-col justify-between h-32 group"
-          >
-            <Calendar className="text-[#FFC400] mb-2 group-hover:scale-110 transition-transform" size={26} />
-            <div>
-              <h3 className="font-bold text-white text-sm">Calendar</h3>
-              <p className="text-[11px] text-gray-400 mt-0.5">Check your schedule</p>
-            </div>
-          </button>
-          <button
-            onClick={() => navigate('/goals')}
-            className="p-5 bg-[#1B1B1B] border border-[#222] rounded-2xl hover:border-[#FFC400] transition-colors text-left flex flex-col justify-between h-32 group"
-          >
-            <Target className="text-[#FFC400] mb-2 group-hover:scale-110 transition-transform" size={26} />
-            <div>
-              <h3 className="font-bold text-white text-sm">Goals</h3>
-              <p className="text-[11px] text-gray-400 mt-0.5">Track your goals</p>
-            </div>
-          </button>
-          <button
-            onClick={() => navigate('/profile')}
-            className="p-5 bg-[#1B1B1B] border border-[#222] rounded-2xl hover:border-[#FFC400] transition-colors text-left flex flex-col justify-between h-32 group"
-          >
-            <Settings className="text-[#FFC400] mb-2 group-hover:scale-110 transition-transform" size={26} />
-            <div>
-              <h3 className="font-bold text-white text-sm">Settings</h3>
-              <p className="text-[11px] text-gray-400 mt-0.5">Manage your profile</p>
-            </div>
-          </button>
-        </div>
-      </Card>
     </div>
   );
 }

@@ -46,11 +46,11 @@ export function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#090909] py-12 px-4">
-      <Card variant="elevated" className="w-full max-w-md bg-[#151515] border border-[#1B1B1B] p-8 rounded-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-[#080B10] py-12 px-4">
+      <Card variant="elevated" className="w-full max-w-md bg-[#10151D] border border-white/5 p-8 rounded-2xl shadow-xl">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-white mb-1.5">Welcome Back</h1>
-          <p className="text-gray-400 text-xs">Sign in to your FitAI X account</p>
+          <p className="text-[#A8B0BF] text-xs">Sign in to your FitAI X account</p>
         </div>
 
         {error && (
@@ -65,6 +65,7 @@ export function SignInPage() {
             type="email"
             placeholder="you@example.com"
             error={errors.email?.message}
+            className="bg-[#171D26] border-white/5 text-white placeholder-[#6F7887]"
             {...register('email')}
             onChange={() => clearError()}
           />
@@ -73,30 +74,31 @@ export function SignInPage() {
             type="password"
             placeholder="••••••••"
             error={errors.password?.message}
+            className="bg-[#171D26] border-white/5 text-white placeholder-[#6F7887]"
             {...register('password')}
             onChange={() => clearError()}
           />
           <div className="flex items-center justify-between">
-            <label className="flex items-center text-xs text-gray-400">
-              <input type="checkbox" className="mr-2 bg-[#1B1B1B] border-[#222] rounded focus:ring-0" />
+            <label className="flex items-center text-xs text-[#A8B0BF] select-none cursor-pointer">
+              <input type="checkbox" className="mr-2 bg-[#171D26] border-white/5 rounded focus:ring-0 focus:ring-offset-0 text-[#FFC400]" />
               Remember me
             </label>
-            <a href="#" className="text-xs text-[#FFC400] hover:text-[#e0ad00] font-semibold">
+            <a href="#" className="text-xs text-[#FFC400] hover:text-[#FFD43B] font-bold">
               Forgot password?
             </a>
           </div>
           <Button 
             type="submit" 
-            className="w-full bg-[#FFC400] text-black hover:bg-[#e0ad00] font-bold rounded-xl py-3 mt-4 text-xs shadow-lg shadow-[#FFC400]/10" 
+            className="w-full bg-[#FFC400] text-black hover:bg-[#FFD43B] font-bold rounded-xl py-3 mt-4 text-xs shadow-lg shadow-[#FFC400]/10" 
             isLoading={isSubmitting}
           >
             Sign In
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-xs text-gray-400">
+        <p className="mt-6 text-center text-xs text-[#A8B0BF]">
           Don't have an account?{' '}
-          <Link to="/signup" className="text-[#FFC400] hover:text-[#e0ad00] font-bold">
+          <Link to="/signup" className="text-[#FFC400] hover:text-[#FFD43B] font-bold">
             Sign up
           </Link>
         </p>

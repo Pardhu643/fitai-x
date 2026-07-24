@@ -134,14 +134,14 @@ export function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090909] py-12 px-4">
+    <div className="min-h-screen bg-[#080B10] py-12 px-4">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-extrabold text-white mb-2">Welcome to FitAI X</h1>
-          <p className="text-gray-400 text-sm">Let's personalize your fitness journey</p>
+          <p className="text-[#A8B0BF] text-sm">Let's personalize your fitness journey</p>
         </div>
 
-        <Card variant="elevated" className="bg-[#151515] border border-white/5 p-8 rounded-2xl mb-6 shadow-xl">
+        <Card variant="elevated" className="bg-[#10151D] border border-white/5 p-8 rounded-2xl mb-6 shadow-xl">
           {/* Stepper */}
           <div className="flex items-center justify-between mb-8 overflow-x-auto pb-2 select-none">
             {STEPS.map((step) => (
@@ -153,7 +153,7 @@ export function OnboardingPage() {
                         ? 'bg-[#FFC400] text-black shadow-md shadow-[#FFC400]/20'
                         : currentStep > step.id
                         ? 'bg-[#7CFF4D] text-black'
-                        : 'bg-[#1B1B1B] text-gray-500 border border-white/5'
+                        : 'bg-[#171D26] text-gray-500 border border-white/5'
                     }`}
                   >
                     {currentStep > step.id ? <Check size={16} className="stroke-[3]" /> : step.id}
@@ -163,7 +163,7 @@ export function OnboardingPage() {
                   }`}>{step.title}</span>
                 </div>
                 {step.id < STEPS.length && (
-                  <div className="flex-1 h-[2px] mx-2 bg-[#1B1B1B]">
+                  <div className="flex-1 h-[2px] mx-2 bg-[#171D26]">
                     <div
                       className={`h-full bg-[#FFC400] transition-all duration-300 ${
                         currentStep > step.id ? 'w-full' : 'w-0'
@@ -185,7 +185,7 @@ export function OnboardingPage() {
                     type="button" 
                     variant="outline" 
                     onClick={prevStep}
-                    className="border-white/5 hover:bg-[#1B1B1B] text-gray-300"
+                    className="border-white/5 hover:bg-[#151B24] text-gray-300"
                   >
                     <ChevronLeft size={16} className="mr-1.5" />
                     Previous
@@ -195,7 +195,7 @@ export function OnboardingPage() {
                   <Button 
                     type="button" 
                     onClick={nextStep} 
-                    className="ml-auto bg-[#FFC400] text-black hover:bg-[#e0ad00]"
+                    className="ml-auto bg-[#FFC400] text-black hover:bg-[#FFD43B]"
                   >
                     Next
                     <ChevronRight size={16} className="ml-1.5" />
@@ -204,7 +204,7 @@ export function OnboardingPage() {
                   <Button 
                     type="submit" 
                     isLoading={isSubmitting} 
-                    className="ml-auto bg-[#FFC400] text-black hover:bg-[#e0ad00]"
+                    className="ml-auto bg-[#FFC400] text-black hover:bg-[#FFD43B]"
                   >
                     Complete Onboarding
                   </Button>
@@ -225,10 +225,10 @@ function PersonalDetailsStep({ register }: any) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <Input label="Age" type="number" {...register('personal.age', { valueAsNumber: true })} />
         <div>
-          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Gender</label>
+          <label className="block text-xs font-bold text-[#A8B0BF] uppercase tracking-wide mb-2">Gender</label>
           <select 
             {...register('personal.gender')} 
-            className="w-full h-[48px] px-3 py-2 bg-[#1B1B1B] text-white border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
+            className="w-full h-[48px] px-3 py-2 bg-[#171D26] text-white border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
           >
             <option value="MALE">Male</option>
             <option value="FEMALE">Female</option>
@@ -265,7 +265,7 @@ function FitnessGoalStep({ register, watch }: any) {
               className={`border-2 rounded-2xl p-5 cursor-pointer transition-all duration-200 text-center flex flex-col items-center justify-center select-none ${
                 isSelected
                   ? 'border-[#FFC400] bg-[#FFC400]/5 text-white'
-                  : 'border-white/5 bg-[#1B1B1B] hover:border-gray-700 text-gray-300'
+                  : 'border-white/5 bg-[#171D26] hover:border-white/10 text-gray-300'
               }`}
             >
               <input type="radio" {...register('fitness.goal')} value={goal.value} className="sr-only" />
@@ -298,7 +298,7 @@ function ExperienceStep({ register, watch }: any) {
               className={`border-2 rounded-2xl p-5 cursor-pointer transition-all duration-200 block select-none ${
                 isSelected
                   ? 'border-[#FFC400] bg-[#FFC400]/5 text-white'
-                  : 'border-white/5 bg-[#1B1B1B] hover:border-gray-700 text-gray-300'
+                  : 'border-white/5 bg-[#171D26] hover:border-white/10 text-gray-300'
               }`}
             >
               <input type="radio" {...register('fitness.fitnessLevel')} value={level.value} className="sr-only" />
@@ -318,10 +318,10 @@ function ScheduleStep({ register }: any) {
       <h2 className="text-xl font-bold text-white">Workout Schedule</h2>
       <div className="space-y-5">
         <div>
-          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Days per week</label>
+          <label className="block text-xs font-bold text-[#A8B0BF] uppercase tracking-wide mb-2">Days per week</label>
           <select 
             {...register('schedule.workoutDaysPerWeek', { valueAsNumber: true })} 
-            className="w-full h-[48px] px-3 py-2 bg-[#1B1B1B] text-white border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
+            className="w-full h-[48px] px-3 py-2 bg-[#171D26] text-white border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
           >
             {[1, 2, 3, 4, 5, 6, 7].map((day) => (
               <option key={day} value={day}>{day} day{day > 1 ? 's' : ''}</option>
@@ -329,10 +329,10 @@ function ScheduleStep({ register }: any) {
           </select>
         </div>
         <div>
-          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Duration per workout (minutes)</label>
+          <label className="block text-xs font-bold text-[#A8B0BF] uppercase tracking-wide mb-2">Duration per workout (minutes)</label>
           <select 
             {...register('schedule.workoutDurationMinutes', { valueAsNumber: true })} 
-            className="w-full h-[48px] px-3 py-2 bg-[#1B1B1B] text-white border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
+            className="w-full h-[48px] px-3 py-2 bg-[#171D26] text-white border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
           >
             {[15, 30, 45, 60, 90, 120, 150, 180].map((min) => (
               <option key={min} value={min}>{min} minutes</option>
@@ -340,10 +340,10 @@ function ScheduleStep({ register }: any) {
           </select>
         </div>
         <div>
-          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Preferred time</label>
+          <label className="block text-xs font-bold text-[#A8B0BF] uppercase tracking-wide mb-2">Preferred time</label>
           <select 
             {...register('schedule.preferredTime')} 
-            className="w-full h-[48px] px-3 py-2 bg-[#1B1B1B] text-white border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
+            className="w-full h-[48px] px-3 py-2 bg-[#171D26] text-white border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
           >
             <option value="MORNING">Morning</option>
             <option value="AFTERNOON">Afternoon</option>
@@ -379,7 +379,7 @@ function EquipmentStep({ watch, setValue }: any) {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl font-bold text-white">What equipment do you have?</h2>
-        <p className="text-gray-400 text-xs mt-1">Select all that apply</p>
+        <p className="text-[#A8B0BF] text-xs mt-1">Select all that apply</p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {equipmentOptions.map((option) => {
@@ -392,7 +392,7 @@ function EquipmentStep({ watch, setValue }: any) {
               className={`border-2 rounded-2xl p-5 cursor-pointer transition-all duration-200 select-none text-center flex flex-col items-center justify-center ${
                 isSelected
                   ? 'border-[#FFC400] bg-[#FFC400]/5 text-white'
-                  : 'border-white/5 bg-[#1B1B1B] hover:border-gray-700 text-gray-300'
+                  : 'border-white/5 bg-[#171D26] hover:border-white/10 text-gray-300'
               }`}
             >
               <div className="text-3xl mb-3">{option.icon}</div>
@@ -426,18 +426,18 @@ function MedicalStep({ watch, setValue }: any) {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl font-bold text-white">Medical Information</h2>
-        <p className="text-gray-400 text-xs mt-1">Do you have any previous injuries?</p>
+        <p className="text-[#A8B0BF] text-xs mt-1">Do you have any previous injuries?</p>
       </div>
       <div className="space-y-3">
         {injuryTypes.map((injury) => {
           const isChecked = !!watch('medical.injuries')?.find((i: any) => i.type === injury.value);
           return (
-            <label key={injury.value} className="flex items-center space-x-3 bg-[#1B1B1B] border border-white/5 p-4 rounded-xl cursor-pointer hover:border-gray-700 transition-colors">
+            <label key={injury.value} className="flex items-center space-x-3 bg-[#171D26] border border-white/5 p-4 rounded-xl cursor-pointer hover:border-white/10 transition-colors">
               <input
                 type="checkbox"
                 checked={isChecked}
                 onChange={() => toggleInjury(injury.value)}
-                className="w-5 h-5 text-[#FFC400] focus:ring-0 focus:ring-offset-0 bg-[#1D1F24] border-white/5 rounded"
+                className="w-5 h-5 text-[#FFC400] focus:ring-0 focus:ring-offset-0 bg-[#10151D] border-white/5 rounded"
               />
               <span className="text-xs font-bold text-white uppercase tracking-wider">{injury.label}</span>
             </label>
@@ -454,10 +454,10 @@ function DietStep({ register }: any) {
       <h2 className="text-xl font-bold text-white">Dietary Preferences</h2>
       <div className="space-y-5">
         <div>
-          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Diet Type</label>
+          <label className="block text-xs font-bold text-[#A8B0BF] uppercase tracking-wide mb-2">Diet Type</label>
           <select 
             {...register('diet.dietType')} 
-            className="w-full h-[48px] px-3 py-2 bg-[#1B1B1B] text-white border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
+            className="w-full h-[48px] px-3 py-2 bg-[#171D26] text-white border border-white/5 rounded-xl focus:outline-none focus:border-[#FFC400] text-xs font-bold transition-colors color-scheme-dark"
           >
             <option value="VEGETARIAN">Vegetarian</option>
             <option value="VEGAN">Vegan</option>
@@ -477,7 +477,7 @@ function ConfirmationStep({ formData }: { formData: OnboardingFormData }) {
     <div className="space-y-6">
       <h2 className="text-xl font-bold text-white">Confirm Your Details</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
-        <div className="bg-[#1B1B1B] border border-white/5 rounded-xl p-5 text-gray-300">
+        <div className="bg-[#171D26] border border-white/5 rounded-xl p-5 text-gray-300">
           <h3 className="font-extrabold text-[#FFC400] mb-3 uppercase tracking-wider">Personal</h3>
           <div className="space-y-1">
             <p><span className="text-gray-500 font-bold">Age:</span> {formData.personal.age}</p>
@@ -486,14 +486,14 @@ function ConfirmationStep({ formData }: { formData: OnboardingFormData }) {
             <p><span className="text-gray-500 font-bold">Weight:</span> {formData.personal.weightKg} kg</p>
           </div>
         </div>
-        <div className="bg-[#1B1B1B] border border-white/5 rounded-xl p-5 text-gray-300">
+        <div className="bg-[#171D26] border border-white/5 rounded-xl p-5 text-gray-300">
           <h3 className="font-extrabold text-[#FFC400] mb-3 uppercase tracking-wider">Fitness</h3>
           <div className="space-y-1">
             <p><span className="text-gray-500 font-bold">Goal:</span> {formData.fitness.goal}</p>
             <p><span className="text-gray-500 font-bold">Level:</span> {formData.fitness.fitnessLevel}</p>
           </div>
         </div>
-        <div className="bg-[#1B1B1B] border border-white/5 rounded-xl p-5 text-gray-300">
+        <div className="bg-[#171D26] border border-white/5 rounded-xl p-5 text-gray-300">
           <h3 className="font-extrabold text-[#FFC400] mb-3 uppercase tracking-wider">Schedule</h3>
           <div className="space-y-1">
             <p><span className="text-gray-500 font-bold">Days/week:</span> {formData.schedule.workoutDaysPerWeek}</p>
@@ -501,11 +501,11 @@ function ConfirmationStep({ formData }: { formData: OnboardingFormData }) {
             <p><span className="text-gray-500 font-bold">Time:</span> {formData.schedule.preferredTime}</p>
           </div>
         </div>
-        <div className="bg-[#1B1B1B] border border-white/5 rounded-xl p-5 text-gray-300">
+        <div className="bg-[#171D26] border border-white/5 rounded-xl p-5 text-gray-300">
           <h3 className="font-extrabold text-[#FFC400] mb-3 uppercase tracking-wider">Equipment</h3>
           <p className="mt-1 leading-relaxed">{formData.equipment.equipment.join(', ')}</p>
         </div>
-        <div className="bg-[#1B1B1B] border border-white/5 rounded-xl p-5 text-gray-300 md:col-span-2">
+        <div className="bg-[#171D26] border border-white/5 rounded-xl p-5 text-gray-300 md:col-span-2">
           <h3 className="font-extrabold text-[#FFC400] mb-3 uppercase tracking-wider">Diet</h3>
           <p><span className="text-gray-500 font-bold">Type:</span> {formData.diet.dietType}</p>
         </div>

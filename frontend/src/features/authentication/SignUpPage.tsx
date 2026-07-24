@@ -51,11 +51,11 @@ export function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#090909] py-12 px-4">
-      <Card variant="elevated" className="w-full max-w-md bg-[#151515] border border-[#1B1B1B] p-8 rounded-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-[#080B10] py-12 px-4">
+      <Card variant="elevated" className="w-full max-w-md bg-[#10151D] border border-white/5 p-8 rounded-2xl shadow-xl">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-white mb-1.5">Create Account</h1>
-          <p className="text-gray-400 text-xs">Start your AI-powered fitness journey</p>
+          <p className="text-[#A8B0BF] text-xs">Start your AI-powered fitness journey</p>
         </div>
 
         {error && (
@@ -70,6 +70,7 @@ export function SignUpPage() {
             type="text"
             placeholder="John Doe"
             error={errors.name?.message}
+            className="bg-[#171D26] border-white/5 text-white placeholder-[#6F7887]"
             {...register('name')}
             onChange={() => clearError()}
           />
@@ -78,6 +79,7 @@ export function SignUpPage() {
             type="email"
             placeholder="you@example.com"
             error={errors.email?.message}
+            className="bg-[#171D26] border-white/5 text-white placeholder-[#6F7887]"
             {...register('email')}
             onChange={() => clearError()}
           />
@@ -86,6 +88,7 @@ export function SignUpPage() {
             type="password"
             placeholder="••••••••"
             error={errors.password?.message}
+            className="bg-[#171D26] border-white/5 text-white placeholder-[#6F7887]"
             {...register('password')}
             onChange={() => clearError()}
           />
@@ -94,21 +97,22 @@ export function SignUpPage() {
             type="password"
             placeholder="••••••••"
             error={errors.confirmPassword?.message}
+            className="bg-[#171D26] border-white/5 text-white placeholder-[#6F7887]"
             {...register('confirmPassword')}
             onChange={() => clearError()}
           />
           <Button 
             type="submit" 
-            className="w-full bg-[#FFC400] text-black hover:bg-[#e0ad00] font-bold rounded-xl py-3 mt-4 text-xs shadow-lg shadow-[#FFC400]/10" 
+            className="w-full bg-[#FFC400] text-black hover:bg-[#FFD43B] font-bold rounded-xl py-3 mt-4 text-xs shadow-lg shadow-[#FFC400]/10" 
             isLoading={isSubmitting}
           >
             Create Account
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-xs text-gray-400">
+        <p className="mt-6 text-center text-xs text-[#A8B0BF]">
           Already have an account?{' '}
-          <Link to="/signin" className="text-[#FFC400] hover:text-[#e0ad00] font-bold">
+          <Link to="/signin" className="text-[#FFC400] hover:text-[#FFD43B] font-bold">
             Sign in
           </Link>
         </p>
