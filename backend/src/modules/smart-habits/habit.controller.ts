@@ -6,17 +6,60 @@ const asyncHandler = (fn: any) => (req: Request, res: Response, next: NextFuncti
 };
 
 export const habitController = {
-  getHabits: asyncHandler(async (req: Request, res: Response) => {
+  getHabits: asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const userId = (req as any).user?.userId || (req as any).user?.id;
     const habits = await prisma.habit.findMany({
       where: { userId },
-      include: { logs: { orderBy: { logDate: 'desc' }, take: 7 } },
+      include: { logs: { orderBy: { logDate: 'desc' } } },
       orderBy: { createdAt: 'desc' }
     });
-    return res.json({ data: habits });
+
+    const today = new Date();
+    today.setUTCHours(0,0,0,0);
+
+    const habitsWithStatus = habits.map(habit => {
+      const completedToday = habit.logs.some(log => {
+        const logDate = new Date(log.logDate);
+        logDate.setUTCHours(0,0,0,0);
+        return logDate.getTime() === today.getTime() && log.completed;
+      });
+
+      // Calculate streak
+      let streak = 0;
+      const completedLogs = habit.logs.filter(log => log.completed);
+      if (completedLogs.length > 0) {
+        const firstLogDate = new Date(completedLogs[0].logDate);
+        firstLogDate.setUTCHours(0,0,0,0);
+        const diffDays = Math.floor((today.getTime() - firstLogDate.getTime()) / (1000 * 60 * 60 * 24));
+        if (diffDays <= 1) {
+          streak = 1;
+          let expectedNextDate = new Date(firstLogDate);
+          expectedNextDate.setDate(expectedNextDate.getDate() - 1);
+          for (let i = 1; i < completedLogs.length; i++) {
+            const logD = new Date(completedLogs[i].logDate);
+            logD.setUTCHours(0,0,0,0);
+            if (logD.getTime() === expectedNextDate.getTime()) {
+              streak++;
+              expectedNextDate.setDate(expectedNextDate.getDate() - 1);
+            } else {
+              break;
+            }
+          }
+        }
+      }
+
+      return {
+        ...habit,
+        completedToday,
+        streak,
+        type: habit.category.toLowerCase()
+      };
+    });
+
+    return res.json({ data: { habits: habitsWithStatus } });
   }),
 
-  createHabit: asyncHandler(async (req: Request, res: Response) => {
+  createHabit: asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const userId = (req as any).user?.userId || (req as any).user?.id;
     const { name, description, category, type, targetValue, unit, frequency } = req.body;
     
@@ -39,10 +82,20 @@ export const habitController = {
         frequency: frequency || 'DAILY'
       }
     });
-    return res.status(201).json({ data: habit });
+
+    return res.status(201).json({
+      data: {
+        habit: {
+          ...habit,
+          completedToday: false,
+          streak: 0,
+          type: habit.category.toLowerCase()
+        }
+      }
+    });
   }),
 
-  deleteHabit: asyncHandler(async (req: Request, res: Response) => {
+  deleteHabit: asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const userId = (req as any).user?.userId || (req as any).user?.id;
     const { id } = req.params;
 
@@ -53,7 +106,7 @@ export const habitController = {
     return res.json({ success: true });
   }),
 
-  logHabit: asyncHandler(async (req: Request, res: Response) => {
+  logHabit: asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const userId = (req as any).user?.userId || (req as any).user?.id;
     const { id } = req.params;
     const { value, logDate, notes } = req.body;
@@ -71,10 +124,38 @@ export const habitController = {
       create: { habitId: id, userId, value, completed, logDate: date, notes }
     });
     
-    return res.json({ data: log });
+    return res.json({ data: { log } });
+  }),
+
+  completeHabit: asyncHandler(async (req: Request, res: Response): Promise<any> => {
+    const userId = (req as any).user?.userId || (req as any).user?.id;
+    const { id } = req.params;
+
+    const habit = await prisma.habit.findFirst({ where: { id, userId } });
+    if (!habit) return res.status(404).json({ error: 'Habit not found' });
+
+    const date = new Date();
+    date.setUTCHours(0,0,0,0);
+
+    await prisma.habitLog.upsert({
+      where: { habitId_logDate: { habitId: id, logDate: date } },
+      update: { value: habit.targetValue, completed: true },
+      create: { habitId: id, userId, value: habit.targetValue, completed: true, logDate: date }
+    });
+
+    return res.json({
+      data: {
+        habit: {
+          ...habit,
+          completedToday: true,
+          streak: 1,
+          type: habit.category.toLowerCase()
+        }
+      }
+    });
   }),
   
-  getStreak: asyncHandler(async (req: Request, res: Response) => {
+  getStreak: asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const userId = (req as any).user?.userId || (req as any).user?.id;
     const { id } = req.params;
 
