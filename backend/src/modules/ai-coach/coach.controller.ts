@@ -36,15 +36,25 @@ export const coachController = {
     } catch (err: any) {
       console.error('Error in Coach controller chat:', err);
       const errMsg = err.message || '';
+      
       if (
         errMsg.includes('API key') || 
         errMsg.includes('API_KEY_INVALID') || 
         errMsg.includes('key not valid') ||
         (err.status === 400 && errMsg.includes('API key'))
       ) {
-        return res.status(503).json({ error: 'AI Coach is temporarily offline (API key not configured)' });
+        return res.status(503).json({
+          success: false,
+          code: 'AI_PROVIDER_BUSY',
+          message: 'AI Coach is temporarily offline (API key not configured)'
+        });
       }
-      return res.status(503).json({ error: 'Rachel is temporarily unavailable. Please try again shortly.' });
+      
+      return res.status(503).json({
+        success: false,
+        code: 'AI_PROVIDER_BUSY',
+        message: 'Rachel is receiving heavy traffic right now. Please retry in a moment.'
+      });
     }
   }),
 
