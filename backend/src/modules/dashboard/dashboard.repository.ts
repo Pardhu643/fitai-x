@@ -1,5 +1,5 @@
 import { prisma } from '../../core/database/prisma';
-import { DashboardData, DashboardStats, TodayWorkout, RecentActivity, UpcomingWorkout, WeightProgress, FatigueSummary } from './dashboard.types';
+import { DashboardData, DashboardStats, TodayWorkout, RecentActivity, UpcomingWorkout, WeightProgress, FatigueSummary, InjuryRiskSummary } from './dashboard.types';
 
 export class DashboardRepository {
   async getDashboardData(userId: string): Promise<DashboardData> {
@@ -15,7 +15,8 @@ export class DashboardRepository {
       todayLogs,
       activePlan,
       activeList,
-      latestFatigueAssessment
+      latestFatigueAssessment,
+      latestInjuryRiskAssessment
     ] = await Promise.all([
       this.getStats(userId),
       this.getTodayWorkout(userId),
@@ -67,6 +68,10 @@ export class DashboardRepository {
       prisma.fatigueAssessment.findFirst({
         where: { userId },
         orderBy: { calculatedAt: 'desc' },
+      }),
+      prisma.injuryRiskAssessment.findFirst({
+        where: { userId },
+        orderBy: { calculatedAt: 'desc' },
       })
     ]);
 
@@ -103,6 +108,15 @@ export class DashboardRepository {
       calculatedAt: latestFatigueAssessment.calculatedAt,
     } : null;
 
+    const injuryRiskSummary: InjuryRiskSummary | null = latestInjuryRiskAssessment ? {
+      score: latestInjuryRiskAssessment.score,
+      level: latestInjuryRiskAssessment.level as 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL',
+      confidence: latestInjuryRiskAssessment.confidence,
+      disclaimer: latestInjuryRiskAssessment.disclaimer,
+      recommendedPrecautions: latestInjuryRiskAssessment.recommendedPrecautions,
+      calculatedAt: latestInjuryRiskAssessment.calculatedAt,
+    } : null;
+
     return {
       stats,
       todayWorkout,
@@ -118,6 +132,7 @@ export class DashboardRepository {
         }
       } : null,
       fatigueSummary,
+      injuryRiskSummary,
       currentGoal,
       nutritionSummary
     };

@@ -25,6 +25,7 @@ import { nutritionRoutes } from './modules/nutrition/nutrition.routes';
 import { mealPlannerRoutes } from './modules/meal-planner/meal-planner.routes';
 import { groceryGeneratorRoutes } from './modules/grocery-generator/grocery-generator.routes';
 import { fatigueRoutes } from './modules/fatigue-prediction/fatigue.routes';
+import { injuryRiskRoutes } from './modules/injury-predictor/injury-risk.routes';
 
 export const app: Application = express();
 
@@ -62,6 +63,7 @@ app.use('/api/v1', nutritionRoutes);
 app.use('/api/v1', mealPlannerRoutes);
 app.use('/api/v1', groceryGeneratorRoutes);
 app.use('/api/v1/fatigue', fatigueRoutes);
+app.use('/api/v1/injury-risk', injuryRiskRoutes);
 
 app.use((req, _res, next) => {
   try {
