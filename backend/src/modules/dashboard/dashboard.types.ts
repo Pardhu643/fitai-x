@@ -47,6 +47,14 @@ export interface RecoveryScore {
   };
 }
 
+export interface FatigueSummary {
+  score: number;
+  level: 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
+  confidence: number;
+  recommendedAction: string;
+  calculatedAt: Date;
+}
+
 export interface DashboardData {
   stats: DashboardStats;
   todayWorkout: TodayWorkout | null;
@@ -54,6 +62,7 @@ export interface DashboardData {
   upcomingWorkouts: UpcomingWorkout[];
   weightProgress: WeightProgress[];
   recoveryScore: RecoveryScore | null;
+  fatigueSummary: FatigueSummary | null;
   currentGoal: {
     id: string;
     targetWeightKg: number | null;

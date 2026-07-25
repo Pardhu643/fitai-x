@@ -1,5 +1,5 @@
 import { prisma } from '../../core/database/prisma';
-import { DashboardData, DashboardStats, TodayWorkout, RecentActivity, UpcomingWorkout, WeightProgress } from './dashboard.types';
+import { DashboardData, DashboardStats, TodayWorkout, RecentActivity, UpcomingWorkout, WeightProgress, FatigueSummary } from './dashboard.types';
 
 export class DashboardRepository {
   async getDashboardData(userId: string): Promise<DashboardData> {
@@ -14,7 +14,8 @@ export class DashboardRepository {
       latestTarget,
       todayLogs,
       activePlan,
-      activeList
+      activeList,
+      latestFatigueAssessment
     ] = await Promise.all([
       this.getStats(userId),
       this.getTodayWorkout(userId),
@@ -62,11 +63,15 @@ export class DashboardRepository {
       prisma.groceryList.findFirst({
         where: { userId, status: 'ACTIVE' },
         include: { _count: { select: { items: { where: { checked: false } } } } }
+      }),
+      prisma.fatigueAssessment.findFirst({
+        where: { userId },
+        orderBy: { calculatedAt: 'desc' },
       })
     ]);
 
-    const caloriesConsumed = todayLogs.reduce((sum, log) => sum + log.actualCalories, 0);
-    const proteinGramsConsumed = todayLogs.reduce((sum, log) => {
+    const caloriesConsumed = todayLogs.reduce((sum: number, log: any) => sum + log.actualCalories, 0);
+    const proteinGramsConsumed = todayLogs.reduce((sum: number, log: any) => {
       const pro = log.meal?.proteinGrams || 0;
       return sum + Math.round(pro * (log.consumedServings || 1.0));
     }, 0);
@@ -90,6 +95,14 @@ export class DashboardRepository {
       groceryItemsRemaining: activeList?._count?.items || 0
     } : null;
 
+    const fatigueSummary: FatigueSummary | null = latestFatigueAssessment ? {
+      score: latestFatigueAssessment.score,
+      level: latestFatigueAssessment.level as 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL',
+      confidence: latestFatigueAssessment.confidence,
+      recommendedAction: latestFatigueAssessment.recommendedAction,
+      calculatedAt: latestFatigueAssessment.calculatedAt,
+    } : null;
+
     return {
       stats,
       todayWorkout,
@@ -104,6 +117,7 @@ export class DashboardRepository {
           soreness: latestRecovery.sorenessLevel === 'NONE' ? 100 : latestRecovery.sorenessLevel === 'LIGHT' ? 60 : 20,
         }
       } : null,
+      fatigueSummary,
       currentGoal,
       nutritionSummary
     };

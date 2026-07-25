@@ -110,6 +110,7 @@ model User {
   mealPlans              MealPlan[]
   groceryLists           GroceryList[]
   mealLogs               MealLog[]
+  fatigueAssessments     FatigueAssessment[]
 
   @@map("users")
 }
@@ -696,3 +697,40 @@ model MealLog {
   @@map("meal_logs")
 }
 
+enum FatigueLevel {
+  LOW
+  MODERATE
+  HIGH
+  CRITICAL
+}
+
+model FatigueAssessment {
+  id                String        @id @default(cuid())
+  userId            String
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  score             Int           // 0-100, higher = more fatigued
+  level             FatigueLevel
+  confidence        Float         // 0-1, based on available signals
+  explanation       String        // Human-readable explanation
+  recommendedAction String
+  factors           FatigueFactor[]
+  calculationVersion String       @default("1.0")
+  calculatedAt      DateTime      @default(now())
+  forceRecalculate  Boolean       @default(false)
+
+  @@index([userId, calculatedAt])
+  @@map("fatigue_assessments")
+}
+
+model FatigueFactor {
+  id                String           @id @default(cuid())
+  assessmentId      String
+  assessment        FatigueAssessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  name              String           // e.g., "recent_workout_load", "sleep_quality"
+  value             Float            // Normalized 0-1
+  weight            Float            // Contribution to total score
+  impact            String           // "HIGH", "MEDIUM", "LOW"
+  description       String           // Human-readable description
+
+  @@map("fatigue_factors")
+}
