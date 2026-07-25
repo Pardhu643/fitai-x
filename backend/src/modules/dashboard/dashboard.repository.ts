@@ -1,5 +1,5 @@
 import { prisma } from '../../core/database/prisma';
-import { DashboardData, DashboardStats, TodayWorkout, RecentActivity, UpcomingWorkout, WeightProgress, FatigueSummary, InjuryRiskSummary } from './dashboard.types';
+import { DashboardData, DashboardStats, TodayWorkout, RecentActivity, UpcomingWorkout, WeightProgress, FatigueSummary, InjuryRiskSummary, RecommendationSummary } from './dashboard.types';
 
 export class DashboardRepository {
   async getDashboardData(userId: string): Promise<DashboardData> {
@@ -16,7 +16,8 @@ export class DashboardRepository {
       activePlan,
       activeList,
       latestFatigueAssessment,
-      latestInjuryRiskAssessment
+      latestInjuryRiskAssessment,
+      latestRecommendation
     ] = await Promise.all([
       this.getStats(userId),
       this.getTodayWorkout(userId),
@@ -72,6 +73,10 @@ export class DashboardRepository {
       prisma.injuryRiskAssessment.findFirst({
         where: { userId },
         orderBy: { calculatedAt: 'desc' },
+      }),
+      prisma.workoutRecommendation.findFirst({
+        where: { userId, status: 'PENDING' },
+        orderBy: { createdAt: 'desc' },
       })
     ]);
 
@@ -117,6 +122,15 @@ export class DashboardRepository {
       calculatedAt: latestInjuryRiskAssessment.calculatedAt,
     } : null;
 
+    const recommendationSummary: RecommendationSummary | null = latestRecommendation ? {
+      id: latestRecommendation.id,
+      type: latestRecommendation.type as 'PROGRESSIVE_OVERLOAD' | 'DELOAD' | 'RECOVERY_DAY' | 'EXERCISE_SUBSTITUTION' | 'INTENSITY_REDUCTION' | 'VOLUME_REDUCTION',
+      title: latestRecommendation.title,
+      description: latestRecommendation.description,
+      confidence: latestRecommendation.confidence,
+      createdAt: latestRecommendation.createdAt,
+    } : null;
+
     return {
       stats,
       todayWorkout,
@@ -133,6 +147,7 @@ export class DashboardRepository {
       } : null,
       fatigueSummary,
       injuryRiskSummary,
+      recommendationSummary,
       currentGoal,
       nutritionSummary
     };

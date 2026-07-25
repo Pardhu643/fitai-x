@@ -112,6 +112,7 @@ model User {
   mealLogs               MealLog[]
   fatigueAssessments     FatigueAssessment[]
   injuryRiskAssessments  InjuryRiskAssessment[]
+  workoutRecommendations WorkoutRecommendation[]
 
   @@map("users")
 }
@@ -217,6 +218,7 @@ model WorkoutPlan {
   workoutDays  WorkoutDay[]
   versions     WorkoutPlanVersion[]
   explanations PlanChangeExplanation[]
+  recommendations WorkoutRecommendation[]
 
   @@map("workout_plans")
 }
@@ -294,6 +296,7 @@ model ExerciseLibrary {
   instructions      String[]
   contraindications String[]
   workoutExercises  WorkoutExercise[]
+  recommendations    WorkoutRecommendation[]
 
   @@map("exercise_library")
 }
@@ -788,4 +791,48 @@ model InjuryRiskBodyArea {
   recommendedAction String                // Specific action for this area
 
   @@map("injury_risk_body_areas")
+}
+
+enum RecommendationType {
+  PROGRESSIVE_OVERLOAD
+  DELOAD
+  RECOVERY_DAY
+  EXERCISE_SUBSTITUTION
+  INTENSITY_REDUCTION
+  VOLUME_REDUCTION
+}
+
+enum RecommendationStatus {
+  PENDING
+  APPLIED
+  DISMISSED
+  EXPIRED
+}
+
+model WorkoutRecommendation {
+  id                String                @id @default(cuid())
+  userId            String
+  user              User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type              RecommendationType
+  status            RecommendationStatus   @default(PENDING)
+  title             String
+  description       String
+  explanation       String                // Detailed explanation
+  confidence        Float                 // 0-1
+  exerciseId        String?
+  exercise          ExerciseLibrary?      @relation(fields: [exerciseId], references: [id])
+  workoutPlanId     String?
+  workoutPlan       WorkoutPlan?          @relation(fields: [workoutPlanId], references: [id])
+  currentValues     Json?                 // Current sets/reps/weight
+  recommendedValues Json?                 // Recommended sets/reps/weight
+  appliedAt         DateTime?
+  dismissedAt       DateTime?
+  expiresAt         DateTime?
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+
+  @@index([userId, status])
+  @@index([userId, type])
+  @@index([userId, createdAt])
+  @@map("workout_recommendations")
 }

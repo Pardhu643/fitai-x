@@ -64,6 +64,15 @@ export interface InjuryRiskSummary {
   calculatedAt: Date;
 }
 
+export interface RecommendationSummary {
+  id: string;
+  type: 'PROGRESSIVE_OVERLOAD' | 'DELOAD' | 'RECOVERY_DAY' | 'EXERCISE_SUBSTITUTION' | 'INTENSITY_REDUCTION' | 'VOLUME_REDUCTION';
+  title: string;
+  description: string;
+  confidence: number;
+  createdAt: Date;
+}
+
 export interface DashboardData {
   stats: DashboardStats;
   todayWorkout: TodayWorkout | null;
@@ -73,6 +82,7 @@ export interface DashboardData {
   recoveryScore: RecoveryScore | null;
   fatigueSummary: FatigueSummary | null;
   injuryRiskSummary: InjuryRiskSummary | null;
+  recommendationSummary: RecommendationSummary | null;
   currentGoal: {
     id: string;
     targetWeightKg: number | null;
