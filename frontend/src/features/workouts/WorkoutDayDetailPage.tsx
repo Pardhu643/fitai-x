@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { workoutPlanService } from '../../services/workout-plan.service';
+import { recommendationsService } from '../../services/recommendations.service';
 import { useNotificationStore } from '../../store/notificationStore';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Loader } from '../../components/ui/Loader';
-import { ArrowLeft, Play, Info } from 'lucide-react';
+import { ArrowLeft, Play, Info, Activity, Check, X } from 'lucide-react';
 
 export function WorkoutDayDetailPage() {
   const { dayId } = useParams();
@@ -14,10 +15,23 @@ export function WorkoutDayDetailPage() {
   const [loading, setLoading] = useState(true);
   const [day, setDay] = useState<any>(null);
   const [starting, setStarting] = useState(false);
+  const [recommendations, setRecommendations] = useState<any[]>([]);
+  const [applyingRec, setApplyingRec] = useState<string | null>(null);
+  const [dismissingRec, setDismissingRec] = useState<string | null>(null);
 
   useEffect(() => {
     loadDay();
+    loadRecommendations();
   }, [dayId]);
+
+  const loadRecommendations = async () => {
+    try {
+      const data = await recommendationsService.getPendingRecommendations();
+      setRecommendations(data.data || []);
+    } catch (err) {
+      // Silently fail - recommendations are optional
+    }
+  };
 
   const loadDay = async () => {
     try {
@@ -45,6 +59,32 @@ export function WorkoutDayDetailPage() {
       addNotification('error', 'Failed to start workout session');
     } finally {
       setStarting(false);
+    }
+  };
+
+  const handleApplyRecommendation = async (recId: string) => {
+    setApplyingRec(recId);
+    try {
+      await recommendationsService.applyRecommendation(recId);
+      addNotification('success', 'Recommendation applied successfully');
+      loadRecommendations();
+    } catch (err) {
+      addNotification('error', 'Failed to apply recommendation');
+    } finally {
+      setApplyingRec(null);
+    }
+  };
+
+  const handleDismissRecommendation = async (recId: string) => {
+    setDismissingRec(recId);
+    try {
+      await recommendationsService.dismissRecommendation(recId);
+      addNotification('success', 'Recommendation dismissed');
+      loadRecommendations();
+    } catch (err) {
+      addNotification('error', 'Failed to dismiss recommendation');
+    } finally {
+      setDismissingRec(null);
     }
   };
 
@@ -83,6 +123,67 @@ export function WorkoutDayDetailPage() {
       </div>
 
       <div className="space-y-6">
+        {/* Recommendations Section */}
+        {recommendations.length > 0 && (
+          <Card variant="bordered" className="bg-[#151515] border-[#1B1B1B] p-6 rounded-2xl">
+            <div className="flex items-center gap-2 mb-4">
+              <Activity className="text-[#FFC400]" size={20} />
+              <h3 className="text-lg font-bold text-white">Recommendations</h3>
+            </div>
+            <div className="space-y-3">
+              {recommendations.map((rec) => (
+                <div key={rec.id} className="bg-[#10151D] border border-white/5 p-4 rounded-xl">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-sm font-bold text-white">{rec.title}</span>
+                        <span className={`text-xs px-2 py-0.5 rounded-full ${
+                          rec.type === 'DELOAD' ? 'bg-[#FF5E5E]/20 text-[#FF5E5E]' :
+                          rec.type === 'PROGRESSIVE_OVERLOAD' ? 'bg-[#7CFF4D]/20 text-[#7CFF4D]' :
+                          'bg-[#FFC400]/20 text-[#FFC400]'
+                        }`}>
+                          {rec.type.replace('_', ' ')}
+                        </span>
+                      </div>
+                      <p className="text-xs text-[#A8B0BF] mb-2">{rec.description}</p>
+                      {rec.explanation && (
+                        <p className="text-xs text-gray-400 italic">{rec.explanation}</p>
+                      )}
+                      {rec.currentValues && rec.recommendedValues && (
+                        <div className="mt-2 flex gap-4 text-xs">
+                          <span className="text-gray-400">Current: <span className="text-white">{JSON.stringify(rec.currentValues)}</span></span>
+                          <span className="text-gray-400">Recommended: <span className="text-[#7CFF4D]">{JSON.stringify(rec.recommendedValues)}</span></span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => handleApplyRecommendation(rec.id)}
+                        disabled={applyingRec === rec.id || dismissingRec === rec.id}
+                        isLoading={applyingRec === rec.id}
+                        className="bg-[#7CFF4D] text-black hover:bg-[#6BE640] font-bold rounded-xl px-3 py-1.5 text-xs flex items-center gap-1"
+                      >
+                        <Check size={14} />
+                        Apply
+                      </Button>
+                      <Button
+                        onClick={() => handleDismissRecommendation(rec.id)}
+                        disabled={applyingRec === rec.id || dismissingRec === rec.id}
+                        isLoading={dismissingRec === rec.id}
+                        variant="outline"
+                        className="border-white/10 hover:bg-white/5 text-gray-300 font-bold rounded-xl px-3 py-1.5 text-xs flex items-center gap-1"
+                      >
+                        <X size={14} />
+                        Dismiss
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
+
         {day.workoutExercises?.map((we: any, idx: number) => (
           <Card key={we.id} variant="bordered" className="bg-[#151515] border-[#1B1B1B] p-6 rounded-2xl">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-[#1B1B1B] pb-4 mb-4 gap-4">
