@@ -109,5 +109,63 @@ export class GeminiService {
 
     throw new Error('All model attempts failed');
   }
+
+  async generateResponse(prompt: string): Promise<string> {
+    this.init();
+    
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error('API key not configured');
+    }
+    
+    const primaryModel = process.env.GEMINI_MODEL || 'gemini-flash-latest';
+    const fallbackModel = process.env.GEMINI_FALLBACK_MODEL || 'gemini-2.0-flash';
+    
+    const maxAttempts = 3;
+    const delays = [0, 1000, 2500];
+
+    // Try Primary Model first
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      if (attempt > 1) {
+        const jitter = Math.random() * 300;
+        const delay = delays[attempt - 1] + jitter;
+        console.log(`[Gemini Request Retry] Delaying ${Math.round(delay)}ms before attempt ${attempt}...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+
+      try {
+        const reply = await this.generateWithModel(primaryModel, prompt, attempt);
+        return reply;
+      } catch (error: any) {
+        if (!this.isTransientError(error) || attempt === maxAttempts) {
+          if (!this.isTransientError(error)) {
+            throw error;
+          }
+          break;
+        }
+      }
+    }
+
+    // Try Fallback Model
+    console.log(`[Gemini Fallback Request] Switching to fallback model: ${fallbackModel}`);
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      if (attempt > 1) {
+        const jitter = Math.random() * 300;
+        const delay = delays[attempt - 1] + jitter;
+        console.log(`[Gemini Fallback Retry] Delaying ${Math.round(delay)}ms before attempt ${attempt}...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+
+      try {
+        const reply = await this.generateWithModel(fallbackModel, prompt, attempt);
+        return reply;
+      } catch (error: any) {
+        if (!this.isTransientError(error) || attempt === maxAttempts) {
+          throw error;
+        }
+      }
+    }
+
+    throw new Error('All model attempts failed');
+  }
 }
 export const geminiService = new GeminiService();

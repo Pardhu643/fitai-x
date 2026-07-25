@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Dumbbell, Calendar, TrendingUp, Utensils, Settings, LogOut, Target, Droplet, Sparkles, ChevronRight, MessageSquare, Brain, CheckSquare } from 'lucide-react';
+import { Dumbbell, Calendar, TrendingUp, Utensils, Settings, LogOut, Target, Droplet, Sparkles, ChevronRight, MessageSquare, Brain, CheckSquare, ShoppingCart } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { useAuthStore } from '../../store/authStore';
 import { useQueryClient } from '@tanstack/react-query';
@@ -21,6 +21,8 @@ export function Navigation() {
     { to: '/memory', label: 'Memory', icon: Brain },
     { to: '/goals', label: 'Goals', icon: Target },
     { to: '/nutrition', label: 'Nutrition', icon: Utensils },
+    { to: '/meal-planner', label: 'Meal Planner', icon: Calendar },
+    { to: '/grocery-list', label: 'Grocery List', icon: ShoppingCart },
     { to: '/recovery', label: 'Recovery', icon: Droplet },
     { to: '/workouts/history', label: 'Progress', icon: Sparkles },
     { to: '/settings', label: 'Settings', icon: Settings },

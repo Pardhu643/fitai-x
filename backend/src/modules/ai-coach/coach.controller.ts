@@ -27,7 +27,45 @@ export const coachController = {
         orderBy: { date: 'desc' }
       });
       
-      context = { userProfile, currentPlan, recoveryScore };
+      const nutritionProfile = await prisma.nutritionProfile.findUnique({ where: { userId } });
+      const nutritionTarget = await prisma.nutritionTarget.findFirst({ where: { userId }, orderBy: { createdAt: 'desc' } });
+      const activeMealPlan = await prisma.mealPlan.findFirst({
+        where: { userId, status: 'ACTIVE' },
+        include: {
+          days: {
+            include: { meals: { include: { ingredients: true } } },
+            orderBy: { date: 'asc' }
+          }
+        }
+      });
+      const activeGroceryList = await prisma.groceryList.findFirst({
+        where: { userId, status: 'ACTIVE' },
+        include: { items: true }
+      });
+      const todayMealLogs = await prisma.mealLog.findMany({
+        where: {
+          userId,
+          createdAt: {
+            gte: (() => {
+              const d = new Date();
+              d.setHours(0,0,0,0);
+              return d;
+            })()
+          }
+        },
+        include: { meal: true }
+      });
+
+      context = { 
+        userProfile, 
+        currentPlan, 
+        recoveryScore,
+        nutritionProfile,
+        nutritionTarget,
+        activeMealPlan,
+        activeGroceryList,
+        todayMealLogs
+      };
     }
 
     try {

@@ -60,4 +60,13 @@ export interface DashboardData {
     targetDate: Date | null;
     isAchieved: boolean;
   } | null;
+  nutritionSummary?: {
+    calorieTarget: number;
+    caloriesConsumed: number;
+    proteinGramsTarget: number;
+    proteinGramsConsumed: number;
+    nextMealTitle: string | null;
+    nextMealTime: string | null;
+    groceryItemsRemaining: number;
+  } | null;
 }

@@ -19,6 +19,8 @@ import { PlanHistoryPage } from '../features/workouts/PlanHistoryPage';
 import { VersionComparisonPage } from '../features/workouts/VersionComparisonPage';
 import { DecisionExplanationsPage } from '../features/workouts/DecisionExplanationsPage';
 import { NutritionPage } from '../features/nutrition/NutritionPage';
+import { MealPlannerPage } from '../features/nutrition/MealPlannerPage';
+import { GroceryListPage } from '../features/nutrition/GroceryListPage';
 import { GoalsPage } from '../features/goals/GoalsPage';
 import { CalendarPage } from '../features/calendar/CalendarPage';
 import { CoachPage } from '../features/coach/CoachPage';
@@ -101,6 +103,8 @@ export const router = createBrowserRouter([
       { path: 'workouts/explanations', element: <DecisionExplanationsPage /> },
       { path: 'recovery', element: <RecoveryCheckInPage /> },
       { path: 'nutrition', element: <NutritionPage /> },
+      { path: 'meal-planner', element: <MealPlannerPage /> },
+      { path: 'grocery-list', element: <GroceryListPage /> },
       { path: 'settings', element: <ProfilePage /> },
       { path: 'goals', element: <GoalsPage /> },
       { path: 'calendar', element: <CalendarPage /> },

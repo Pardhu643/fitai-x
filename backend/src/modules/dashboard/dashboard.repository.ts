@@ -11,6 +11,10 @@ export class DashboardRepository {
       weightProgress,
       currentGoal,
       latestRecovery,
+      latestTarget,
+      todayLogs,
+      activePlan,
+      activeList
     ] = await Promise.all([
       this.getStats(userId),
       this.getTodayWorkout(userId),
@@ -19,7 +23,72 @@ export class DashboardRepository {
       this.getWeightProgress(userId),
       this.getCurrentGoal(userId),
       prisma.recoveryEntry.findFirst({ where: { userId }, orderBy: { date: 'desc' } }),
+      prisma.nutritionTarget.findFirst({ where: { userId }, orderBy: { createdAt: 'desc' } }),
+      prisma.mealLog.findMany({
+        where: {
+          userId,
+          createdAt: {
+            gte: (() => {
+              const d = new Date();
+              d.setHours(0,0,0,0);
+              return d;
+            })()
+          }
+        },
+        include: { meal: true }
+      }),
+      prisma.mealPlan.findFirst({
+        where: { userId, status: 'ACTIVE' },
+        include: {
+          days: {
+            where: {
+              date: {
+                gte: (() => {
+                  const d = new Date();
+                  d.setHours(0,0,0,0);
+                  return d;
+                })(),
+                lt: (() => {
+                  const d = new Date();
+                  d.setHours(23,59,59,999);
+                  return d;
+                })()
+              }
+            },
+            include: { meals: true }
+          }
+        }
+      }),
+      prisma.groceryList.findFirst({
+        where: { userId, status: 'ACTIVE' },
+        include: { _count: { select: { items: { where: { checked: false } } } } }
+      })
     ]);
+
+    const caloriesConsumed = todayLogs.reduce((sum, log) => sum + log.actualCalories, 0);
+    const proteinGramsConsumed = todayLogs.reduce((sum, log) => {
+      const pro = log.meal?.proteinGrams || 0;
+      return sum + Math.round(pro * (log.consumedServings || 1.0));
+    }, 0);
+
+    const todayMeals = activePlan?.days?.[0]?.meals || [];
+    // Sort breakfast -> lunch -> dinner -> snack
+    const mealOrder: Record<string, number> = { BREAKFAST: 1, LUNCH: 2, DINNER: 3, SNACK: 4 };
+    const sortedMeals = [...todayMeals].sort((a, b) => (mealOrder[a.mealType] || 5) - (mealOrder[b.mealType] || 5));
+    
+    // Find next unconsumed meal
+    const loggedMealIds = todayLogs.map(l => l.mealId);
+    const nextMeal = sortedMeals.find(m => !loggedMealIds.includes(m.id));
+
+    const nutritionSummary = latestTarget ? {
+      calorieTarget: latestTarget.calories,
+      caloriesConsumed,
+      proteinGramsTarget: latestTarget.proteinGrams,
+      proteinGramsConsumed,
+      nextMealTitle: nextMeal ? nextMeal.title : null,
+      nextMealTime: nextMeal ? nextMeal.mealType : null,
+      groceryItemsRemaining: activeList?._count?.items || 0
+    } : null;
 
     return {
       stats,
@@ -36,6 +105,7 @@ export class DashboardRepository {
         }
       } : null,
       currentGoal,
+      nutritionSummary
     };
   }
 

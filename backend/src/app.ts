@@ -21,6 +21,9 @@ import { coachRoutes } from './modules/ai-coach/coach.routes';
 import { memoryRoutes } from './modules/memories/memory.routes';
 import { habitRoutes } from './modules/smart-habits/habit.routes';
 import { calendarRoutes } from './modules/smart-calendar/calendar.routes';
+import { nutritionRoutes } from './modules/nutrition/nutrition.routes';
+import { mealPlannerRoutes } from './modules/meal-planner/meal-planner.routes';
+import { groceryGeneratorRoutes } from './modules/grocery-generator/grocery-generator.routes';
 
 export const app: Application = express();
 
@@ -54,6 +57,9 @@ app.use('/api/v1/ai-coach', coachRoutes);
 app.use('/api/v1/memories', memoryRoutes);
 app.use('/api/v1/smart-habits', habitRoutes);
 app.use('/api/v1/smart-calendar', calendarRoutes);
+app.use('/api/v1', nutritionRoutes);
+app.use('/api/v1', mealPlannerRoutes);
+app.use('/api/v1', groceryGeneratorRoutes);
 
 app.use((req, _res, next) => {
   try {

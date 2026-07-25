@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Dumbbell, Calendar, TrendingUp, Flame, Target, Play, Plus, Clock, Heart } from 'lucide-react';
+import { Dumbbell, Calendar, TrendingUp, Flame, Target, Play, Plus, Clock, Heart, Utensils, ShoppingCart } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { StatisticsCard } from '../../components/ui/StatisticsCard';
@@ -103,6 +103,44 @@ export function DashboardPage() {
           bgColor="bg-[#32D5F4]/15"
         />
       </div>
+
+      {/* Nutrition summary widgets */}
+      {dashboardData?.nutritionSummary && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatisticsCard
+            icon={Utensils}
+            label="Calories Consumed"
+            value={`${dashboardData.nutritionSummary.caloriesConsumed} / ${dashboardData.nutritionSummary.calorieTarget} kcal`}
+            change={`${Math.round((dashboardData.nutritionSummary.caloriesConsumed / dashboardData.nutritionSummary.calorieTarget) * 100)}% of target`}
+            iconColor="text-[#FFC400]"
+            bgColor="bg-[#FFC400]/15"
+          />
+          <StatisticsCard
+            icon={Flame}
+            label="Protein Intake"
+            value={`${dashboardData.nutritionSummary.proteinGramsConsumed} / ${dashboardData.nutritionSummary.proteinGramsTarget}g`}
+            change="Target Muscle Protein"
+            iconColor="text-[#FF4081]"
+            bgColor="bg-[#FF4081]/15"
+          />
+          <StatisticsCard
+            icon={Calendar}
+            label="Next Scheduled Meal"
+            value={dashboardData.nutritionSummary.nextMealTitle || 'No Meals Remaining'}
+            change={dashboardData.nutritionSummary.nextMealTime || 'Done for today'}
+            iconColor="text-[#00E5FF]"
+            bgColor="bg-[#00E5FF]/15"
+          />
+          <StatisticsCard
+            icon={ShoppingCart}
+            label="Groceries Remaining"
+            value={`${dashboardData.nutritionSummary.groceryItemsRemaining} items`}
+            change="Active Shopping Checklist"
+            iconColor="text-[#00E676]"
+            bgColor="bg-[#00E676]/15"
+          />
+        </div>
+      )}
 
       {/* Today's Workout & Recovery Score */}
       <div className="grid lg:grid-cols-3 gap-8">
