@@ -26,6 +26,7 @@ import { CalendarPage } from '../features/calendar/CalendarPage';
 import { CoachPage } from '../features/coach/CoachPage';
 import { MemoryPage } from '../features/memories/MemoryPage';
 import { HabitsPage } from '../features/habits/HabitsPage';
+import { RecommendationsPage } from '../features/recommendations/RecommendationsPage';
 
 
 export const router = createBrowserRouter([
@@ -111,6 +112,7 @@ export const router = createBrowserRouter([
       { path: 'coach', element: <CoachPage /> },
       { path: 'memory', element: <MemoryPage /> },
       { path: 'habits', element: <HabitsPage /> },
+      { path: 'recommendations', element: <RecommendationsPage /> },
     ],
   },
 

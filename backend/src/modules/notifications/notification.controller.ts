@@ -44,5 +44,36 @@ export const notificationController = {
     });
     
     return res.json({ success: true });
+  }),
+
+  createNotification: asyncHandler(async (req: Request, res: Response) => {
+    const userId = (req as any).user?.userId || (req as any).user?.id;
+    const { title, message, type } = req.body;
+
+    // Check for duplicate notification of same type in last 24 hours
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const existing = await prisma.notification.findFirst({
+      where: {
+        userId,
+        type,
+        createdAt: { gte: oneDayAgo }
+      }
+    });
+
+    if (existing) {
+      return res.json({ success: true, message: 'Similar notification already sent recently', data: existing });
+    }
+
+    const notification = await prisma.notification.create({
+      data: {
+        userId,
+        title,
+        message,
+        type,
+        read: false
+      }
+    });
+
+    return res.json({ success: true, data: notification });
   })
 };

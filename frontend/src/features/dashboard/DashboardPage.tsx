@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Dumbbell, Calendar, TrendingUp, Flame, Target, Play, Plus, Clock, Heart, Utensils, ShoppingCart } from 'lucide-react';
+import { Dumbbell, Calendar, TrendingUp, Flame, Target, Play, Plus, Clock, Heart, Utensils, ShoppingCart, AlertTriangle, Zap, Shield, Activity } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { StatisticsCard } from '../../components/ui/StatisticsCard';
@@ -55,6 +55,9 @@ export function DashboardPage() {
   const upcomingWorkouts = dashboardData?.upcomingWorkouts || [];
   const weightProgress = dashboardData?.weightProgress || [];
   const currentGoal = dashboardData?.currentGoal;
+  const fatigueSummary = dashboardData?.fatigueSummary;
+  const injuryRiskSummary = dashboardData?.injuryRiskSummary;
+  const recommendationSummary = dashboardData?.recommendationSummary;
 
   return (
     <div className="space-y-8 pb-12 bg-[#080B10]">
@@ -207,6 +210,98 @@ export function DashboardPage() {
             </div>
           </div>
         </Card>
+      </div>
+
+      {/* Phase 7 Cards: Fatigue, Injury Risk, Recommendations */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Fatigue Card */}
+        {fatigueSummary && (
+          <Card variant="bordered" className="bg-[#10151D] border-white/5 p-6 rounded-2xl">
+            <div className="flex items-center gap-2 mb-4">
+              <Zap className="text-[#FF5E5E]" size={20} />
+              <h3 className="text-lg font-bold text-white">Fatigue Level</h3>
+            </div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-3xl font-bold text-white">{fatigueSummary.score}</span>
+              <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+                fatigueSummary.level === 'LOW' ? 'bg-[#7CFF4D]/20 text-[#7CFF4D]' :
+                fatigueSummary.level === 'MODERATE' ? 'bg-[#FFC400]/20 text-[#FFC400]' :
+                fatigueSummary.level === 'HIGH' ? 'bg-[#FF5E5E]/20 text-[#FF5E5E]' :
+                'bg-[#FF0000]/20 text-[#FF0000]'
+              }`}>
+                {fatigueSummary.level}
+              </span>
+            </div>
+            <p className="text-xs text-[#A8B0BF] mt-2">{fatigueSummary.explanation}</p>
+          </Card>
+        )}
+
+        {/* Injury Risk Card */}
+        {injuryRiskSummary && (
+          <Card variant="bordered" className="bg-[#10151D] border-white/5 p-6 rounded-2xl">
+            <div className="flex items-center gap-2 mb-4">
+              <Shield className="text-[#FF5E5E]" size={20} />
+              <h3 className="text-lg font-bold text-white">Injury Risk</h3>
+            </div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-3xl font-bold text-white">{injuryRiskSummary.score}</span>
+              <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+                injuryRiskSummary.level === 'LOW' ? 'bg-[#7CFF4D]/20 text-[#7CFF4D]' :
+                injuryRiskSummary.level === 'MODERATE' ? 'bg-[#FFC400]/20 text-[#FFC400]' :
+                injuryRiskSummary.level === 'HIGH' ? 'bg-[#FF5E5E]/20 text-[#FF5E5E]' :
+                'bg-[#FF0000]/20 text-[#FF0000]'
+              }`}>
+                {injuryRiskSummary.level}
+              </span>
+            </div>
+            <p className="text-[10px] text-[#A8B0BF] mt-2 italic">{injuryRiskSummary.disclaimer}</p>
+          </Card>
+        )}
+
+        {/* Recommendation Card */}
+        {recommendationSummary && (
+          <Card variant="bordered" className={`bg-[#10151D] p-6 rounded-2xl ${
+            recommendationSummary.type === 'DELOAD' ? 'border-[#FF5E5E]/50' : 'border-white/5'
+          }`}>
+            <div className="flex items-center gap-2 mb-4">
+              <Activity className={recommendationSummary.type === 'DELOAD' ? 'text-[#FF5E5E]' : 'text-[#FFC400]'} size={20} />
+              <h3 className="text-lg font-bold text-white">Recommendation</h3>
+            </div>
+            <div className="mb-3">
+              <span className="text-sm font-bold text-white block">{recommendationSummary.title}</span>
+              <span className="text-xs text-[#A8B0BF] block mt-1">{recommendationSummary.description}</span>
+            </div>
+            <div className="flex items-center gap-2 mt-3">
+              <div className="flex-1 bg-[#151B24] rounded-full h-1.5">
+                <div 
+                  className="bg-[#FFC400] h-1.5 rounded-full" 
+                  style={{ width: `${recommendationSummary.confidence * 100}%` }}
+                ></div>
+              </div>
+              <span className="text-xs text-[#A8B0BF]">{Math.round(recommendationSummary.confidence * 100)}%</span>
+            </div>
+          </Card>
+        )}
+
+        {/* Deload Warning */}
+        {recommendationSummary?.type === 'DELOAD' && (
+          <Card variant="bordered" className="bg-[#FF5E5E]/10 border-[#FF5E5E]/30 p-6 rounded-2xl col-span-full sm:col-span-2 lg:col-span-3">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="text-[#FF5E5E]" size={24} />
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-white">Deload Recommended</h3>
+                <p className="text-sm text-[#A8B0BF] mt-1">{recommendationSummary.description}</p>
+              </div>
+              <Button 
+                onClick={() => navigate('/recommendations')}
+                variant="outline"
+                className="border-[#FF5E5E]/50 text-[#FF5E5E] hover:bg-[#FF5E5E]/20 rounded-xl text-xs"
+              >
+                View Details
+              </Button>
+            </div>
+          </Card>
+        )}
       </div>
 
       {/* Weight Progress & Goals */}

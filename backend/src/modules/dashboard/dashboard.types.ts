@@ -47,6 +47,32 @@ export interface RecoveryScore {
   };
 }
 
+export interface FatigueSummary {
+  score: number;
+  level: 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
+  confidence: number;
+  recommendedAction: string;
+  calculatedAt: Date;
+}
+
+export interface InjuryRiskSummary {
+  score: number;
+  level: 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
+  confidence: number;
+  disclaimer: string;
+  recommendedPrecautions: string[];
+  calculatedAt: Date;
+}
+
+export interface RecommendationSummary {
+  id: string;
+  type: 'PROGRESSIVE_OVERLOAD' | 'DELOAD' | 'RECOVERY_DAY' | 'EXERCISE_SUBSTITUTION' | 'INTENSITY_REDUCTION' | 'VOLUME_REDUCTION';
+  title: string;
+  description: string;
+  confidence: number;
+  createdAt: Date;
+}
+
 export interface DashboardData {
   stats: DashboardStats;
   todayWorkout: TodayWorkout | null;
@@ -54,6 +80,9 @@ export interface DashboardData {
   upcomingWorkouts: UpcomingWorkout[];
   weightProgress: WeightProgress[];
   recoveryScore: RecoveryScore | null;
+  fatigueSummary: FatigueSummary | null;
+  injuryRiskSummary: InjuryRiskSummary | null;
+  recommendationSummary: RecommendationSummary | null;
   currentGoal: {
     id: string;
     targetWeightKg: number | null;

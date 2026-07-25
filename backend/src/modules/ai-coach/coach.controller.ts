@@ -27,6 +27,22 @@ export const coachController = {
         orderBy: { date: 'desc' }
       });
       
+      const fatigueAssessment = await prisma.fatigueAssessment.findFirst({
+        where: { userId },
+        orderBy: { calculatedAt: 'desc' }
+      });
+
+      const injuryRiskAssessment = await prisma.injuryRiskAssessment.findFirst({
+        where: { userId },
+        orderBy: { calculatedAt: 'desc' }
+      });
+
+      const pendingRecommendations = await prisma.workoutRecommendation.findMany({
+        where: { userId, status: 'PENDING' },
+        orderBy: { createdAt: 'desc' },
+        take: 5
+      });
+      
       const nutritionProfile = await prisma.nutritionProfile.findUnique({ where: { userId } });
       const nutritionTarget = await prisma.nutritionTarget.findFirst({ where: { userId }, orderBy: { createdAt: 'desc' } });
       const activeMealPlan = await prisma.mealPlan.findFirst({
@@ -60,6 +76,9 @@ export const coachController = {
         userProfile, 
         currentPlan, 
         recoveryScore,
+        fatigueAssessment,
+        injuryRiskAssessment,
+        pendingRecommendations,
         nutritionProfile,
         nutritionTarget,
         activeMealPlan,
