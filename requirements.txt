@@ -1,0 +1,37 @@
+# FitAI X - Installation & Dependency Requirements
+# Note: This is a Node.js monorepo using npm workspaces. 
+# Dependencies are managed via root package.json and workspace package.json files.
+
+# [System Prerequisites]
+Node.js>=18.0.0
+npm>=9.0.0
+Docker>=20.10.0
+Docker-Compose>=2.0.0
+
+# [Main Dependencies - Backend]
+express>=4.18.2
+@prisma/client>=5.7.0
+prisma>=5.7.0
+typescript>=5.3.0
+tsx>=4.7.0
+zod>=3.22.0
+bcrypt>=5.1.1
+jsonwebtoken>=9.0.2
+
+# [Main Dependencies - Frontend]
+react>=18.0.0
+vite>=5.0.0
+typescript>=5.3.0
+tailwind-css>=3.0.0
+zustand>=4.0.0
+@tanstack/react-query>=5.0.0
+
+# [Installation Commands]
+# 1. Install all dependencies across workspaces:
+#    npm install
+#
+# 2. Run Database Migrations:
+#    npm run db:migrate
+#
+# 3. Generate Prisma Client:
+#    npm run db:generate
