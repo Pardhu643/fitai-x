@@ -111,6 +111,7 @@ model User {
   groceryLists           GroceryList[]
   mealLogs               MealLog[]
   fatigueAssessments     FatigueAssessment[]
+  injuryRiskAssessments  InjuryRiskAssessment[]
 
   @@map("users")
 }
@@ -733,4 +734,58 @@ model FatigueFactor {
   description       String           // Human-readable description
 
   @@map("fatigue_factors")
+}
+
+enum InjuryRiskLevel {
+  LOW
+  MODERATE
+  HIGH
+  CRITICAL
+}
+
+model InjuryRiskAssessment {
+  id                     String                @id @default(cuid())
+  userId                 String
+  user                   User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  score                  Int                   // 0-100, higher = higher risk
+  level                  InjuryRiskLevel
+  confidence             Float                 // 0-1, based on available signals
+  disclaimer             String                @default("This assessment is a fitness risk indicator and is not a medical diagnosis.")
+  explanation            String                // Human-readable explanation
+  recommendedPrecautions String[]
+  exercisesToAvoid       String[]              // Exercise names to avoid
+  trainingModifications  String[]              // Suggested modifications
+  factors                InjuryRiskFactor[]
+  bodyAreas              InjuryRiskBodyArea[]
+  calculationVersion     String                @default("1.0")
+  calculatedAt           DateTime              @default(now())
+  forceRecalculate       Boolean               @default(false)
+
+  @@index([userId, calculatedAt])
+  @@map("injury_risk_assessments")
+}
+
+model InjuryRiskFactor {
+  id                String                @id @default(cuid())
+  assessmentId      String
+  assessment        InjuryRiskAssessment  @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  name              String                // e.g., "previous_injury", "current_pain", "high_fatigue"
+  value             Float                 // Normalized 0-1
+  weight            Float                 // Contribution to total score
+  impact            String                // "HIGH", "MEDIUM", "LOW"
+  description       String                // Human-readable description
+
+  @@map("injury_risk_factors")
+}
+
+model InjuryRiskBodyArea {
+  id                String                @id @default(cuid())
+  assessmentId      String
+  assessment        InjuryRiskAssessment  @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  bodyArea          String                // e.g., "Knee", "Shoulder", "Back"
+  riskLevel         String                // "LOW", "MODERATE", "HIGH"
+  reason            String                // Why this area is at risk
+  recommendedAction String                // Specific action for this area
+
+  @@map("injury_risk_body_areas")
 }
