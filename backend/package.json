@@ -5,14 +5,15 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "tsc && npx prisma generate",
     "start": "node dist/server.js",
     "lint": "eslint . --ext .ts",
     "typecheck": "tsc --noEmit",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "db:migrate:deploy": "prisma migrate deploy"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
