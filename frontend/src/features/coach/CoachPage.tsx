@@ -2,6 +2,18 @@ import { useState, useEffect, useRef } from 'react';
 import { coachService, ChatMessage } from '../../services/coach.service';
 import { Card } from '../../components/ui/Card';
 import { Send, Bot, User, Sparkles, AlertTriangle, RefreshCw } from 'lucide-react';
+import {
+  WorkoutCard,
+  ExerciseCard,
+  MealCard,
+  GroceryCard,
+  HabitCard,
+  GoalCard,
+  RecoveryCard,
+  CalendarCard,
+  ProgressCard,
+  GeneralCard
+} from '../../components/ai-response-cards';
 
 export function CoachPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -32,7 +44,13 @@ export function CoachPage() {
     try {
       const res = await coachService.chat(textToSend, messages);
       if (res.data?.reply) {
-        setMessages(prev => [...prev, { role: 'assistant', content: res.data.reply }]);
+        const assistantMessage: ChatMessage = { 
+          role: 'assistant', 
+          content: res.data.reply,
+          type: res.data.type || 'general',
+          data: res.data.data
+        };
+        setMessages(prev => [...prev, assistantMessage]);
       } else {
         throw new Error('No reply from Rachel');
       }
@@ -54,6 +72,49 @@ export function CoachPage() {
       setMessages(prev => prev.slice(0, -1));
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const renderAssistantMessage = (msg: ChatMessage) => {
+    // If no type or type is 'general', render as regular chat message
+    if (!msg.type || msg.type === 'general') {
+      return (
+        <div className="p-3 rounded-2xl max-w-[75%] bg-[#151B24] text-white rounded-tl-sm">
+          <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+        </div>
+      );
+    }
+
+    // Render appropriate card based on type
+    const cardProps = {
+      title: msg.content.split('\n')[0] || 'Recommendation',
+      explanation: msg.content.split('\n').slice(1).join('\n') || '',
+      data: msg.data,
+      onAction: undefined,
+      actionLabel: undefined
+    };
+
+    switch (msg.type) {
+      case 'workout':
+        return <WorkoutCard {...cardProps} />;
+      case 'exercise':
+        return <ExerciseCard {...cardProps} />;
+      case 'meal':
+        return <MealCard {...cardProps} />;
+      case 'grocery':
+        return <GroceryCard {...cardProps} />;
+      case 'habit':
+        return <HabitCard {...cardProps} />;
+      case 'goal':
+        return <GoalCard {...cardProps} />;
+      case 'recovery':
+        return <RecoveryCard {...cardProps} />;
+      case 'calendar':
+        return <CalendarCard {...cardProps} />;
+      case 'progress':
+        return <ProgressCard {...cardProps} />;
+      default:
+        return <GeneralCard {...cardProps} />;
     }
   };
 
@@ -100,9 +161,15 @@ export function CoachPage() {
                   <Bot size={16} />
                 </div>
               )}
-              <div className={`p-3 rounded-2xl max-w-[75%] ${msg.role === 'user' ? 'bg-[#FFC400] text-black rounded-tr-sm' : 'bg-[#151B24] text-white rounded-tl-sm'}`}>
-                <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-              </div>
+              {msg.role === 'user' ? (
+                <div className="p-3 rounded-2xl max-w-[75%] bg-[#FFC400] text-black rounded-tr-sm">
+                  <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                </div>
+              ) : (
+                <div className="max-w-[85%]">
+                  {renderAssistantMessage(msg)}
+                </div>
+              )}
               {msg.role === 'user' && (
                 <div className="w-8 h-8 rounded-full bg-[#32D5F4] flex-shrink-0 flex items-center justify-center text-black">
                   <User size={16} />

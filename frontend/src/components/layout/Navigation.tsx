@@ -24,7 +24,7 @@ export function Navigation() {
     { to: '/meal-planner', label: 'Meal Planner', icon: Calendar },
     { to: '/grocery-list', label: 'Grocery List', icon: ShoppingCart },
     { to: '/recovery', label: 'Recovery', icon: Droplet },
-    { to: '/workouts/history', label: 'Progress', icon: Sparkles },
+    { to: '/progress', label: 'Progress', icon: Sparkles },
     { to: '/settings', label: 'Settings', icon: Settings },
   ];
 

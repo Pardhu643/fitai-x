@@ -80,4 +80,16 @@ export const workoutController = {
       message: 'Active plan updated successfully',
     });
   },
+
+  createFromAi: async (req: Request, res: Response): Promise<any> => {
+    const userId = (req as AuthRequest).user.userId;
+    const planData = req.body;
+    const plan = await workoutService.createWorkoutPlanFromAi(userId, planData);
+
+    return res.status(201).json({
+      success: true,
+      message: 'Workout plan created from AI successfully',
+      data: plan,
+    });
+  },
 };

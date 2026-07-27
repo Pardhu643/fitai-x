@@ -5,6 +5,9 @@ const prisma = new PrismaClient({
   log: process.env.NODE_ENV === 'development'
     ? ['query', 'error', 'warn']
     : ['error'],
+  transactionOptions: {
+    timeout: 60000, // 60 seconds
+  },
 });
 
 prisma.$use(async (params, next) => {

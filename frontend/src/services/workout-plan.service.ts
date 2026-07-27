@@ -16,6 +16,11 @@ export const workoutPlanService = {
     return response.data;
   },
 
+  async createFromAi(aiData: any): Promise<any> {
+    const response = await api.post('/api/v1/workout-plans/from-ai', aiData);
+    return response.data;
+  },
+
   async getPlans(): Promise<any> {
     const response = await api.get('/api/v1/workout-plans');
     return response.data;

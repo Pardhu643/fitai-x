@@ -24,7 +24,18 @@ export const mealPlannerController = {
       budgetPreference: 'MEDIUM'
     };
 
-    const target = await nutritionTargetService.getLatestTargets(userId);
+    let target;
+    try {
+      target = await nutritionTargetService.getLatestTargets(userId);
+    } catch (err) {
+      console.warn('Failed to get nutrition targets, using defaults:', err);
+      target = {
+        calories: 2000,
+        proteinGrams: 150,
+        carbohydrateGrams: 200,
+        fatGrams: 65
+      };
+    }
 
     const generated = await mealGeneratorService.generateMealPlan({
       calories: target.calories,
@@ -32,11 +43,11 @@ export const mealPlannerController = {
       carbs: target.carbohydrateGrams,
       fat: target.fatGrams,
       dietaryPreference: profile.dietaryPreference || 'BALANCED',
-      allergies: profile.allergies,
-      dislikedFoods: profile.dislikedFoods,
-      preferredCuisines: profile.preferredCuisines,
-      mealsPerDay: profile.mealsPerDay,
-      maxCookingTime: profile.maximumCookingTime,
+      allergies: profile.allergies || [],
+      dislikedFoods: profile.dislikedFoods || [],
+      preferredCuisines: profile.preferredCuisines || [],
+      mealsPerDay: profile.mealsPerDay || 3,
+      maxCookingTime: profile.maximumCookingTime || 60,
       daysCount: days
     });
 

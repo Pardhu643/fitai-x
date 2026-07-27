@@ -12,24 +12,29 @@ export const memoryController = {
       where: { userId },
       orderBy: { createdAt: 'desc' }
     });
-    return res.json({ data: memories });
+    return res.json({ data: { memories } });
   }),
 
   createMemory: asyncHandler(async (req: Request, res: Response) => {
     const userId = (req as any).user?.userId || (req as any).user?.id;
-    const { type, title, summary, source, importance } = req.body;
+    const { content, type, title, summary, source, importance } = req.body;
+    
+    // Support simple content field from frontend
+    const memoryTitle = title || (content ? content.substring(0, 50) : 'Memory');
+    const memorySummary = summary || content || '';
+    const memoryType = type || 'USER_INPUT';
     
     const memory = await prisma.aIMemory.create({
       data: {
         userId,
-        type,
-        title,
-        summary,
-        source,
+        type: memoryType,
+        title: memoryTitle,
+        summary: memorySummary,
+        source: source || 'MANUAL',
         importance: importance || 'NORMAL'
       }
     });
-    return res.status(201).json({ data: memory });
+    return res.status(201).json({ data: { memory } });
   }),
 
   updateMemory: asyncHandler(async (req: Request, res: Response) => {

@@ -8,13 +8,17 @@ const asyncHandler = (fn: any) => (req: Request, res: Response, next: NextFuncti
 export const calendarController = {
   getEvents: asyncHandler(async (req: Request, res: Response) => {
     const userId = (req as any).user?.userId || (req as any).user?.id;
-    const { start, end } = req.query;
+    const { start, end, startDate, endDate } = req.query;
+    
+    // Support both param names for compatibility
+    const queryStart = start || startDate;
+    const queryEnd = end || endDate;
     
     let dateFilter = {};
-    if (start && end) {
+    if (queryStart && queryEnd) {
       dateFilter = {
-        startTime: { gte: new Date(start as string) },
-        endTime: { lte: new Date(end as string) }
+        startTime: { gte: new Date(queryStart as string) },
+        endTime: { lte: new Date(queryEnd as string) }
       };
     }
 
@@ -22,7 +26,7 @@ export const calendarController = {
       where: { userId, ...dateFilter },
       orderBy: { startTime: 'asc' }
     });
-    return res.json({ data: events });
+    return res.json({ data: { events } });
   }),
 
   createEvent: asyncHandler(async (req: Request, res: Response) => {
@@ -44,7 +48,7 @@ export const calendarController = {
         reminderMinutes
       }
     });
-    return res.status(201).json({ data: event });
+    return res.status(201).json({ data: { event } });
   }),
 
   updateEvent: asyncHandler(async (req: Request, res: Response) => {
@@ -70,7 +74,7 @@ export const calendarController = {
         reminderMinutes
       }
     });
-    return res.json({ data: updated });
+    return res.json({ data: { event: updated } });
   }),
 
   deleteEvent: asyncHandler(async (req: Request, res: Response) => {
