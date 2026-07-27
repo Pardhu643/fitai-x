@@ -31,6 +31,42 @@ export class WorkoutService {
     await workoutRepository.setActivePlan(userId, planId);
   }
 
+  async createWorkoutPlanFromAi(userId: string, aiData: any): Promise<WorkoutPlan> {
+    const plan = {
+      name: aiData.name || 'AI Generated Workout Plan',
+      goal: 'GENERAL_FITNESS',
+      fitnessLevel: 'INTERMEDIATE',
+      daysPerWeek: aiData.daysPerWeek || 3,
+      durationMinutes: 45,
+      startDate: new Date(),
+      workoutDays: aiData.workoutDays?.map((day: any) => ({
+        dayOfWeek: day.dayOfWeek,
+        dayNumber: day.dayOfWeek,
+        name: day.name,
+        title: day.focus,
+        durationMinutes: day.durationMinutes,
+        estimatedDuration: day.durationMinutes,
+        focus: day.focus,
+        exercises: day.exercises?.map((ex: any, idx: number) => ({
+          name: ex.name,
+          muscleGroup: ex.muscleGroup,
+          equipmentNeeded: 'None',
+          instructions: `${ex.sets} sets of ${ex.reps} reps with ${ex.restSeconds}s rest`,
+          order: idx,
+          exerciseSets: Array.from({ length: ex.sets }, (_, i) => ({
+            reps: ex.reps,
+            weightKg: null,
+            restTimeSeconds: ex.restSeconds,
+            order: i,
+            isCompleted: false,
+          })),
+        })),
+      })) || [],
+    };
+
+    return workoutRepository.createWorkoutPlan(userId, plan);
+  }
+
   private async generateWorkoutPlanWithRules(data: GenerateWorkoutInput): Promise<any> {
     const { goal, fitnessLevel, workoutDaysPerWeek, workoutDurationMinutes, equipment } = data;
 

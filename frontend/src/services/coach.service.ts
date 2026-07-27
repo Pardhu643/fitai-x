@@ -1,9 +1,23 @@
 import api from '../lib/api';
 
+export type ResponseType = 
+  | 'general'
+  | 'workout'
+  | 'exercise'
+  | 'meal'
+  | 'grocery'
+  | 'habit'
+  | 'goal'
+  | 'recovery'
+  | 'calendar'
+  | 'progress';
+
 export interface ChatMessage {
   id?: string;
   role: 'user' | 'assistant';
   content: string;
+  type?: ResponseType;
+  data?: any;
 }
 
 export const coachService = {

@@ -87,13 +87,13 @@ export function MemoryPage() {
       ) : (
         <div className="grid gap-4">
           {memories.map((mem) => (
-            <Card key={mem._id || mem.id} className="bg-[#151B24] border-white/5 p-4 flex items-start justify-between gap-4 group">
+            <Card key={mem.id} className="bg-[#151B24] border-white/5 p-4 flex items-start justify-between gap-4 group">
               <div>
-                <p className="text-white text-sm mb-1">{mem.content}</p>
+                <p className="text-white text-sm mb-1">{mem.summary}</p>
                 <span className="text-xs text-[#A8B0BF]">{mem.createdAt ? format(new Date(mem.createdAt), 'MMM d, yyyy h:mm a') : 'Recently'}</span>
               </div>
               <button 
-                onClick={() => handleDelete(mem._id || mem.id)}
+                onClick={() => handleDelete(mem.id)}
                 className="text-[#FF5E5E] opacity-0 group-hover:opacity-100 p-2 hover:bg-[#FF5E5E]/10 rounded-lg transition"
               >
                 <Trash2 size={18} />

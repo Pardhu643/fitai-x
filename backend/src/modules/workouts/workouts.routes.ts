@@ -6,6 +6,7 @@ const router = Router();
 
 router.get('/', authenticate, workoutController.getWorkouts);
 router.post('/generate', authenticate, workoutController.generateWorkout);
+router.post('/from-ai', authenticate, workoutController.createFromAi);
 router.get('/:id', authenticate, workoutController.getWorkoutById);
 router.patch('/:id/active', authenticate, workoutController.setActivePlan);
 router.get('/history/all', authenticate, workoutController.getHistory);

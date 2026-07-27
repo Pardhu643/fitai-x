@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { calendarService } from '../../services/calendar.service';
 import { Card } from '../../components/ui/Card';
-import { Calendar as CalendarIcon, Clock, Activity, Plus, Loader2 } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, Plus, Loader2 } from 'lucide-react';
 import { format, addDays } from 'date-fns';
 
 export function CalendarPage() {
@@ -66,17 +66,16 @@ export function CalendarPage() {
           ) : (
             <div className="space-y-4">
               {events.map((ev) => (
-                <div key={ev._id || ev.id} className="flex gap-4 p-4 rounded-xl bg-[#151B24] border border-white/5 hover:border-white/10 transition">
+                <div key={ev.id} className="flex gap-4 p-4 rounded-xl bg-[#151B24] border border-white/5 hover:border-white/10 transition">
                   <div className="w-16 flex-shrink-0 text-center">
-                    <div className="text-sm font-bold text-white">{format(new Date(ev.date), 'h:mm a')}</div>
-                    <div className="text-xs text-[#A8B0BF]">{format(new Date(ev.date), 'MMM d')}</div>
+                    <div className="text-sm font-bold text-white">{format(new Date(ev.startTime), 'h:mm a')}</div>
+                    <div className="text-xs text-[#A8B0BF]">{format(new Date(ev.startTime), 'MMM d')}</div>
                   </div>
                   <div className="w-1 bg-[#FFC400] rounded-full"></div>
                   <div className="flex-1">
                     <h3 className="text-base font-bold text-white mb-1">{ev.title}</h3>
                     <div className="flex gap-3 text-xs text-[#A8B0BF]">
-                      <span className="flex items-center gap-1"><Clock size={12}/> {ev.duration} min</span>
-                      <span className="flex items-center gap-1"><Activity size={12}/> {ev.type}</span>
+                      <span className="flex items-center gap-1"><Clock size={12}/> {ev.type}</span>
                     </div>
                   </div>
                 </div>

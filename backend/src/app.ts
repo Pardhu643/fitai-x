@@ -24,6 +24,8 @@ import { calendarRoutes } from './modules/smart-calendar/calendar.routes';
 import { nutritionRoutes } from './modules/nutrition/nutrition.routes';
 import { mealPlannerRoutes } from './modules/meal-planner/meal-planner.routes';
 import { groceryGeneratorRoutes } from './modules/grocery-generator/grocery-generator.routes';
+import { goalsRoutes } from './modules/goals/goals.routes';
+import { progressRoutes } from './modules/progress/progress.routes';
 import { fatigueRoutes } from './modules/fatigue-prediction/fatigue.routes';
 import { injuryRiskRoutes } from './modules/injury-predictor/injury-risk.routes';
 import { recommendationsRoutes } from './modules/recommendations/recommendations.routes';
@@ -37,8 +39,12 @@ app.use(express.urlencoded({ extended: true }));
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 200,
   message: 'Too many requests from this IP, please try again later',
+  skip: (req) => {
+    // Skip rate limiting for authenticated requests
+    return !!(req as any).user?.userId || !!(req as any).user?.id;
+  }
 });
 
 app.use('/api', limiter);
@@ -63,6 +69,8 @@ app.use('/api/v1/smart-calendar', calendarRoutes);
 app.use('/api/v1', nutritionRoutes);
 app.use('/api/v1', mealPlannerRoutes);
 app.use('/api/v1', groceryGeneratorRoutes);
+app.use('/api/v1/goals', goalsRoutes);
+app.use('/api/v1/progress', progressRoutes);
 app.use('/api/v1/fatigue', fatigueRoutes);
 app.use('/api/v1/injury-risk', injuryRiskRoutes);
 app.use('/api/v1/recommendations', recommendationsRoutes);

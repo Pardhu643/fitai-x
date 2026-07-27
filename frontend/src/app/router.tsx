@@ -27,6 +27,7 @@ import { CoachPage } from '../features/coach/CoachPage';
 import { MemoryPage } from '../features/memories/MemoryPage';
 import { HabitsPage } from '../features/habits/HabitsPage';
 import { RecommendationsPage } from '../features/recommendations/RecommendationsPage';
+import { ProgressPage } from '../features/progress/ProgressPage';
 
 
 export const router = createBrowserRouter([
@@ -113,6 +114,7 @@ export const router = createBrowserRouter([
       { path: 'memory', element: <MemoryPage /> },
       { path: 'habits', element: <HabitsPage /> },
       { path: 'recommendations', element: <RecommendationsPage /> },
+      { path: 'progress', element: <ProgressPage /> },
     ],
   },
 
