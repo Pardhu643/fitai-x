@@ -7,7 +7,7 @@ import { app } from './app';
 import { logger } from './core/logger/logger';
 import { prisma } from './core/database/prisma';
 
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT || 3000);
 const server = http.createServer(app);
 
 const gracefulShutdown = async (signal: string) => {
