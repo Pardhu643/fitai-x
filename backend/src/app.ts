@@ -33,7 +33,18 @@ import { recommendationsRoutes } from './modules/recommendations/recommendations
 export const app: Application = express();
 
 app.use(helmet());
-app.use(cors());
+const allowedOrigins = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',') : [];
+app.use(cors({
+  origin: (origin, callback) => {
+    // If FRONTEND_URL is not set, allow all for local dev, otherwise restrict
+    if (!origin || allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.length === 0) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
